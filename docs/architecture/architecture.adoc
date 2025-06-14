@@ -1,0 +1,23 @@
+= RhonAyro - Software architecture
+:author: skr
+:version: 0.1
+:toc: right
+:toclevels: 4
+:sectnums:
+:sectnumlevels: 4
+
+*Document history*
+
+Enter latest entry on top.
+
+[cols="1,4,1,1"]
+|===
+| Version | What | Who | When
+
+| 0.1
+| Created
+| skr
+| 2021-02-22
+|===
+
+

@@ -1,0 +1,22 @@
+@startuml system_overview_component_diagram
+
+package Backend {
+    component Api
+    package Services{
+
+    }
+    package Logic {
+
+    }
+
+    Api --> Services
+    Api --> Logic
+}
+
+package Frontend {
+    component Ui
+}
+
+Ui --> Api
+
+@enduml

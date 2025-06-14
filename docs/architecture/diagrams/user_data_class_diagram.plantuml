@@ -1,0 +1,47 @@
+@startuml user_data_class_diagram
+
+namespace RhonAyro.Common.Data {
+    enum Role {
+        Athlete
+        Advisor
+        Judge
+        ChiefJudge
+    }
+
+    class Person {
+        + Id : string
+        + FirstName : string
+        + LastName : string
+        + Role : Role
+    }
+
+    class User {
+        + UserName : string
+    }
+
+    class Wheel {
+        + Id : string
+        + Size : float
+    }
+
+    class WheelAssignment {
+        + Id : string
+        + WheelId : string
+        + AthleteId : string
+        + DisciplineId : string
+    }
+
+    class Discipline {
+        + Id : string
+        + Name : string
+    }
+
+    Person o-- Role
+    Person <|-- User
+
+    WheelAssignment *-- Wheel
+    WheelAssignment *-- Person
+    WheelAssignment *-- Discipline
+}
+
+@enduml
