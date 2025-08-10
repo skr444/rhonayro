@@ -1,18 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace RhonAyro.Common.Data.ScoreKeeping
 {
+    /// <summary>
+    /// Represents a type of compeditive discipline of a performance.
+    /// </summary>
     public sealed class Discipline : Entity
     {
+        /// <summary>
+        /// Gets or sets the name of the discipline.
+        /// </summary>
         public string? Name { get; set; }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Discipline"/>.
+        /// </summary>
         public Discipline()
         {
             Name = null;
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{base.ToString()}, Name='{Name}'";
         }
     }
 }

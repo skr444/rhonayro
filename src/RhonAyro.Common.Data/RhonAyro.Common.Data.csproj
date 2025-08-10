@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
+        <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>RhonAyro.Common.Data</RootNamespace>
@@ -21,6 +21,7 @@
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <NoWarn />
+        <DocumentationFile>..\..\build\$(Configuration)\RhonAyro.Common.Data.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -28,7 +29,6 @@
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <NoWarn />
-        <DocumentationFile>..\..\build\$(Configuration)\RhonAyro.Common.Data.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

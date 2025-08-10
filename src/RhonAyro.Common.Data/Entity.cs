@@ -31,5 +31,11 @@ namespace RhonAyro.Common.Data
             Created = DateTime.UtcNow;
             Modified = DateTime.UtcNow;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"Id='{Id}', Created='{Created}', Modified='{Modified}'";
+        }
     }
 }

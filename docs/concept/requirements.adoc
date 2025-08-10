@@ -1,0 +1,107 @@
+= RhonAyro - Requirements
+:author: skr
+:version: 0.1
+:toc: right
+:toclevels: 4
+:sectnums:
+:sectnumlevels: 4
+
+*Document history*
+
+[cols="1,4,1,1"]
+|===
+| Version | What | Who | When
+
+| 0.1
+| Created
+| skr
+| 2025-08-09
+|===
+
+== About
+
+This document outlines the nature of the RhonAyro application and its requirements.
+The application context is described with screenshots from Excel in `RhonAyro.pdf`, which is refined here.
+
+Purpose:: A desktop application to replace a legacy Excel sheet used for managing and scoring wheel gymnastics competitions.
+
+Target audience:: Jury teams, likely non-technical users, used to the Excel version.
+
+== Constraints
+
+- C# WPF application targeting .NET 8
+- Only use CommunityToolkit.Mvvm as UI 3rd party lib.
+- Simple repository abstraction layer for the data storage and persistence of the data to simple JSON files on disk.
+- For the MVP I'll leave out all the logo import features and focus solely on the score recording and rank calculations.
+- The application will be written exclusively in English, but should be able to localize and offer at least a German UI in future iterations.
+- Multi-user capability is out of scope for now.
+
+== Features
+
+The application supports the usual procedure of a wheel gymnastics competition, which consists of different stages (four currently):
+
+. Preparation
+** Importing various data items
+*** Club data
+*** Organizer logo
+*** Sponsor logo
+** Open event
+*** Set competition date and start time
+. Start List Management
+** Discipline selection
+** Athlete selection
+** Wheel size entry
+** Coach selection
+** Edit start order
+** Print start lists (PDF)
+. Competition event
+** Display and scoring of each athlete's performance
+** Multiple juror scores
+** Difficulty rating
+** Calculated end score
+*** Specific algorithm per discipline
+** Navigation through athlete list
+** Marking competition as complete
+. Ranking / Results
+** Discipline selection
+** Result list display and printout
+
+The following sections describe each stage more detailed.
+
+===  Preparation
+
+- The club data is available on a central database.
+** For the MVP a simple CSV import suffices.
+** Later iterations will connect to the database.
+- Each member has one or more roles.
+** The member roles are: Athlete, Coach and Juror.
+   At this point each member must occupy a single role and/or a combination of up to three (all) roles.
+** Roles do not have any semantics at this point, they're solely for book keeping purposes.
+- The wheel size also doesn't have semantics, just for book keeping.
+- What is semantically relevant is the discipline, because different disciplines require different score calculation algorithms.
+- Before the start of a discipline there should be the following data set: athlete, wheel size, coach.
+- At this point, the application should be able to produce an athletes list showing athlete name, coach, wheel size and preliminary starting position.
+
+=== Start discipline
+
+- A discipline needs to be started by a juror, who must be identified (i.e. the jury members must be enlisted in the system).
+  The juror will make all modifications as of this point.
+- Discipline must be selected.
+- To start a discipline, the coach and the starting position need to be confirmed and updated if needed, as they can change during the event.
+- With a successful start of a discipline, we have the following additional data points: discipline, jury members.
+
+=== During a discipline competition
+
+- For each performance during the discipline multiple score values are recorded by the juror.
+  This will be made on a single terminal with the MVP.
+- The difficulty is known in advance and should be a recordable item like the score values.
+- Once all score values and the difficulty level have been entered, the application calculates the final score according to the discipline scoring algorithm.
+** It would be nice, if this is visually emphasized by the UI, but it's not necessary for the MVP.
+- Rinse and repeat for all performances of a discipline.
+  I'm pretty sure that all performances per discipline are held in sequence.
+  So no switching disciplines should be necessary, but I wouldn't rule it out.
+
+=== After all performances have been completed
+
+- The only thing to do now is to produce a score board in both digital (screen) and paper (print out) versions.
+- It must be possible to post-edit the score board by opening a single data set and changing score, difficulty and/or associated persons.

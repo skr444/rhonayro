@@ -1,0 +1,68 @@
+@startuml
+
+class ClubMember {
+    + Id : Guid
+    + FirstName : string
+    + LastName : string
+    + Roles : MemberRole[]
+}
+
+enum MemberRole {
+    None = 0
+    Athlete = 1
+    Coach = 2
+    Juror = 4
+}
+
+class Discipline {
+    + Name : string
+    + ScoringAlgorithm : Func<List<int>, int, double>
+}
+
+class StartListEntry {
+    + Athlete : ClubMember
+    + Coach : ClubMember
+    + Wheel : Wheel
+    + StartPosition : int
+}
+
+class DisciplineSession {
+    + Discipline : Discipline
+    + Juror : ClubMember
+    + Performances : PerformanceEntry[]
+    + ScoreBoard : ScoreBoard
+}
+
+class ScoreEntry {
+    + Juror : ClubMember
+    + Value : double
+}
+
+class PerformanceEntry {
+    + Athlete : StartListEntry
+    + ScoreValues : ScoreEntry[]
+    + Difficulty : double
+    + FinalScore : double
+}
+
+class ScoreBoard {
+    + HighScore : PerformanceEntry[]
+}
+
+class Wheel {
+    + Size : float
+}
+
+ClubMember "1" o.. "1..*" MemberRole : Role
+StartListEntry "1" *.. "1" ClubMember : Athlete
+StartListEntry "1" *.. "1" ClubMember : Coach
+StartListEntry "1" *.. "1" Wheel : Wheel
+DisciplineSession "1" *.. "1" Discipline : Discipline
+DisciplineSession "1" *.. "1" ClubMember : Juror
+DisciplineSession "1" o.. "0..*" PerformanceEntry : Performances
+DisciplineSession "1" *.. "1" ScoreBoard : ScoreBoard
+PerformanceEntry "1" *.. "1" StartListEntry : Athlete
+PerformanceEntry "1" o.. "0..*" ScoreEntry : ScoreValues
+ScoreBoard "1" o.. "0..*" PerformanceEntry : HighScore
+
+@enduml

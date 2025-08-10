@@ -1,4 +1,5 @@
 = RhonAyro - Software architecture
+:imagesdir: ./resources/images
 :author: skr
 :version: 0.1
 :toc: right
@@ -7,8 +8,6 @@
 :sectnumlevels: 4
 
 *Document history*
-
-Enter latest entry on top.
 
 [cols="1,4,1,1"]
 |===
@@ -19,5 +18,15 @@ Enter latest entry on top.
 | skr
 | 2021-02-22
 |===
+
+== About
+
+This document describes the architecture of the RhonAyro software.
+
+== Domain model
+
+.Domain model classes
+[#img-domain_model_class_diagram]
+image::domain_model_class_diagram.svg[image]
 
 
