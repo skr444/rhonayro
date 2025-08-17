@@ -1,0 +1,126 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+using RhonAyro.Common.Data;
+using RhonAyro.Infrastructure.Storage.Api;
+using RhonAyro.Infrastructure.Runtime.Api;
+
+using IoFile = System.IO.File;
+
+namespace RhonAyro.Infrastructure.Storage.File
+{
+    /// <summary>
+    /// Reads and writes instances of <typeparamref name="TData"/> from and to disk.
+    /// </summary>
+    /// <typeparam name="TData">Data type of the instance to persist.</typeparam>
+    internal abstract class FileRepository<TData> : Repository<TData>, IFileRepository where TData : Entity
+    {
+        private readonly string path;
+        private readonly JsonSerializerOptions serializeReadOptions;
+        private readonly JsonSerializerOptions serializeWriteOptions;
+        private readonly ILifecycleManager lifecycleManager;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="FileRepository{TData}"/>.
+        /// </summary>
+        /// <param name="storageFilePath">Filesystem path pointing to the storage file.</param>
+        /// <param name="lifecycleManagement">Central lifecycle management.</param>
+        protected FileRepository(string storageFilePath, ILifecycleManager lifecycleManagement) : base()
+        {
+            ArgumentException.ThrowIfNullOrEmpty(storageFilePath, nameof(storageFilePath));
+            path = storageFilePath;
+
+            ArgumentNullException.ThrowIfNull(lifecycleManagement, nameof(lifecycleManagement));
+            lifecycleManager = lifecycleManagement;
+
+            string? folder = Path.GetDirectoryName(path);
+            if (!String.IsNullOrEmpty(folder) && !Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            serializeReadOptions = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                ReadCommentHandling = JsonCommentHandling.Skip
+            };
+            serializeWriteOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            Acquire();
+        }
+
+        /// <inheritdoc />
+        public void Save()
+        {
+            Task.Run(async () =>
+            {
+                using (Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
+                    bufferSize: 8192, useAsync: true))
+                {
+                    if (lifecycleManager.Token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    await JsonSerializer.SerializeAsync(stream, store, serializeWriteOptions, lifecycleManager.Token);
+                }
+            }, lifecycleManager.Token).ConfigureAwait(true).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public void Load()
+        {
+            if (IoFile.Exists(path))
+            {
+                Task.Run(async () =>
+                {
+                    using (Stream stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None,
+                        bufferSize: 8192, useAsync: true))
+                    {
+                        if (lifecycleManager.Token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        store = await JsonSerializer
+                            .DeserializeAsync<IDictionary<Guid, TData>>(stream, serializeReadOptions, lifecycleManager.Token)
+                                ?? new Dictionary<Guid, TData>();
+                    }
+                }, lifecycleManager.Token).ConfigureAwait(true).GetAwaiter().GetResult();
+            }
+            else
+            {
+                Save();
+            }
+        }
+
+        /// <inheritdoc />
+        public void Delete()
+        {
+            if (IoFile.Exists(path))
+            {
+                IoFile.Delete(path);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void Acquire()
+        {
+            Load();
+        }
+
+        /// <inheritdoc />
+        protected override void Persist()
+        {
+            Save();
+        }
+    }
+}
