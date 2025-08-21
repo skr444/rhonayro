@@ -3,10 +3,132 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:local="clr-namespace:RhonAyro.Client.Desktop.Ui"
+        xmlns:nav="clr-namespace:RhonAyro.Client.Desktop.Ui.Navigation"
+        xmlns:vm="clr-namespace:RhonAyro.Client.Desktop.Ui.ViewModels"
+        xmlns:view="clr-namespace:RhonAyro.Client.Desktop.Ui.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="RhonAyro" Height="900" Width="1400">
+    
+    <Window.Resources>
+        <Style TargetType="Label" x:Key="TitleLabelStyle">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0 0 0 3"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="3 3 3 0"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="3 0 3 0"/>
+        </Style>
+        <Style TargetType="ListView">
+            <Setter Property="Margin" Value="3 0 3 0"/>
+        </Style>
+
+        <!-- row indices -->
+        <sys:Int32 x:Key="UiMenuRowIndex">0</sys:Int32>
+        <sys:Int32 x:Key="UiMainRowIndex">2</sys:Int32>
+        <sys:Int32 x:Key="UiStatusSplitterRowIndex">3</sys:Int32>
+        <sys:Int32 x:Key="UiStatusRowIndex">4</sys:Int32>
+
+        <!-- column indices -->
+        <sys:Int32 x:Key="UiExpanderSplitterColumnIndex">1</sys:Int32>
+        <sys:Int32 x:Key="UiExpanderColumnIndex">2</sys:Int32>
+
+        <!-- Sort newest-first -->
+        <CollectionViewSource x:Key="LogView" Source="{Binding LogEntries}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Timestamp" Direction="Descending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        
+        <!-- tab view -->
+        <!-- Header: show title + close button -->
+        <DataTemplate DataType="{x:Type nav:TabItemHost}" x:Key="TabHeaderTemplate">
+            <DockPanel LastChildFill="False" Margin="4,0">
+                <TextBlock Text="{Binding Header}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <Button Content="X"
+                        Width="18" Height="18" Padding="0"
+                        Command="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource AncestorType=TabControl}}"
+                        CommandParameter="{Binding}"
+                        ToolTip="Close"/>
+            </DockPanel>
+        </DataTemplate>
+
+        <!-- Content: display the VM, which the next DataTemplates map to views -->
+        <DataTemplate DataType="{x:Type nav:TabItemHost}" x:Key="TabContentTemplate">
+            <ContentControl Content="{Binding ViewModel}"/>
+        </DataTemplate>
+
+        <!-- VM→View mappings -->
+        <DataTemplate DataType="{x:Type vm:PreparationViewModel}">
+            <view:PreparationView/>
+        </DataTemplate>
+    </Window.Resources>
+
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/> <!-- Menu -->
+            <RowDefinition Height="3"/> <!-- Gap -->
+            <RowDefinition Height="50*"/> <!-- Main -->
+            <RowDefinition Height="5"/> <!-- Gap -->
+            <RowDefinition Height="2*" MinHeight="33" MaxHeight="400"/> <!-- Status -->
+        </Grid.RowDefinitions>
+        
+        <!-- Menu -->
+        <Menu Grid.Row="{StaticResource UiMenuRowIndex}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <MenuItem Header="File" VerticalAlignment="Stretch">
+                <Button Content="Open app data folder" Command="{Binding OpenDataFolderCommand}"/>
+                <Button Content="Exit" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Help" VerticalAlignment="Stretch">
+                <Button Content="About" Command="{Binding AboutCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Main -->
+        <Grid Grid.Row="{StaticResource UiMainRowIndex}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*"/> <!-- Working -->
+                <ColumnDefinition Width="5"/> <!-- Splitter -->
+                <ColumnDefinition Width="1*" MinWidth="30" MaxWidth="300"/> <!-- Score -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Working -->
+            <Grid Grid.Column="0"
+                  Background="LightCyan">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TabControl ItemsSource="{Binding Tabs}"
+                            SelectedItem="{Binding SelectedTab}"
+                            ItemTemplate="{StaticResource TabHeaderTemplate}"
+                            ContentTemplate="{StaticResource TabContentTemplate}"/>
+            </Grid>
+
+            <!-- Splitter -->
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="Gray"/>
+
+            <!-- Score -->
+            <Grid Grid.Column="2" Background="LightSlateGray">
+                
+            </Grid>
+        </Grid>
+
+        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Background="Gray"/>
+
+        <!-- Status -->
+        <Grid Grid.Row="{StaticResource UiStatusRowIndex}"
+              Background="LightGray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/> <!-- Log -->
+                <ColumnDefinition Width="10*"/> <!-- Confirmation -->
+                <ColumnDefinition Width="5*"/> <!-- Aux -->
+            </Grid.ColumnDefinitions>
+            
+        </Grid>
 
     </Grid>
 </Window>

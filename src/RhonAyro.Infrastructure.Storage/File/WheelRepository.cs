@@ -1,8 +1,8 @@
-using RhonAyro.Common Data ScoreKeeping;
-using RhonAyro Infrastructure Runtime Api;
-using RhonAyro Infrastructure Storage Api;
+using RhonAyro.Common.Data.ScoreKeeping;
+using RhonAyro.Infrastructure.Runtime.Api;
+using RhonAyro.Infrastructure.Storage.Api;
 
-namespace RhonAyro.Infrastructure Storage File
+namespace RhonAyro.Infrastructure.Storage.File
 {
     /// <summary>
     /// Manages instances of <see cref="Wheel"/>.

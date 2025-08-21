@@ -4,7 +4,6 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <ImplicitUsings>disable</ImplicitUsings>
         <RootNamespace>RhonAyro.Common.Data</RootNamespace>
         <AssemblyName>RhonAyro.Common.Data</AssemblyName>
         <PackageId>RhonAyro.Common.Data</PackageId>

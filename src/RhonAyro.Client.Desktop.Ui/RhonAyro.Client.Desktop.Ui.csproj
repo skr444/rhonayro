@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <UseWPF>true</UseWPF>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows</TargetFramework>
-        <Nullable>enable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
-        <UseWPF>true</UseWPF>
+        <Nullable>enable</Nullable>
         <RootNamespace>RhonAyro.Client.Desktop.Ui</RootNamespace>
         <AssemblyName>RhonAyro.Client.Desktop.Ui</AssemblyName>
         <PackageId>RhonAyro.Client.Desktop.Ui</PackageId>
@@ -43,6 +43,11 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RhonAyro.Infrastructure.Runtime\RhonAyro.Infrastructure.Runtime.csproj" />
+      <ProjectReference Include="..\RhonAyro.Infrastructure.Storage\RhonAyro.Infrastructure.Storage.csproj" />
     </ItemGroup>
 
 </Project>

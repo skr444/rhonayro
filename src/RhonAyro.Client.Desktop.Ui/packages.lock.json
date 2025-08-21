@@ -21,6 +21,19 @@
         "type": "Transitive",
         "resolved": "8.0.2",
         "contentHash": "3iE7UF7MQkCv1cxzCahz+Y/guQbTqieyxyaWKhrRO91itI9cOKO76OHeQDahqG4MmW5umr3CcCvGmK92lWNlbg=="
+      },
+      "rhonayro.common.data": {
+        "type": "Project"
+      },
+      "rhonayro.infrastructure.runtime": {
+        "type": "Project"
+      },
+      "rhonayro.infrastructure.storage": {
+        "type": "Project",
+        "dependencies": {
+          "RhonAyro.Common.Data": "[1.0.0, )",
+          "RhonAyro.Infrastructure.Runtime": "[1.0.0, )"
+        }
       }
     }
   }

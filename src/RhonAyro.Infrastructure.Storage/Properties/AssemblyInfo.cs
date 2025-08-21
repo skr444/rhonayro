@@ -1,10 +1,13 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("RhonAyro.Infrastructure.Storage")]
 [assembly: AssemblyDescription("Data persistence")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("RhonAyro.Infrastructure.Storage")]
+
+[assembly: InternalsVisibleTo("RhonAyro.Client.Desktop.Ui")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

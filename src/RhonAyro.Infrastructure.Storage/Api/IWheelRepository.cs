@@ -1,4 +1,4 @@
-using RhonAyro.Common.Data ScoreKeeping;
+using RhonAyro.Common.Data.ScoreKeeping;
 
 namespace RhonAyro.Infrastructure.Storage.Api
 {

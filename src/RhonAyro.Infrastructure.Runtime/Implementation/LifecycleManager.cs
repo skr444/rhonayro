@@ -35,7 +35,7 @@ namespace RhonAyro.Infrastructure.Runtime.Implementation
         public void Shutdown()
         {
             cts.Cancel();
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            Thread.Sleep(TimeSpan.FromMilliseconds(300));
             try
             {
                 cts.Dispose();

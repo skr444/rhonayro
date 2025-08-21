@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using RhonAyro.Infrastructure.Runtime.Api;
 using RhonAyro.Infrastructure.Storage.Api;
@@ -29,14 +26,39 @@ namespace RhonAyro.Infrastructure.Storage.File
         public FileStorage(string storageDir, ILifecycleManager lifecycleManagement)
         {
             storageDirectory = storageDir;
+            repositories = new Dictionary<Type, IFileRepository>();
 
-            profileRepository = new ProfileRepository(Path.Combine(storageDirectory, "profiles.json"), lifecycleManagement);
-            placeholderTagRepository = new PlaceholderTagRepository(Path.Combine(storageDirectory, "placeholders.json"),
-                lifecycleManagement);
-            fragmentRepository = new FragmentRepository(Path.Combine(storageDirectory, "fragments.json"), lifecycleManagement);
-            replacementSourceRepository = new ReplacementSourceRepository(
-                Path.Combine(storageDirectory, "replacementSources.json"),
-                lifecycleManagement);
+            repositories.Add(typeof(IClubMemberRepository), new ClubMemberRepository(
+                Path.Combine(storageDirectory, "clubMembers.json"),
+                lifecycleManagement));
+
+            repositories.Add(typeof(IDisciplineRepository), new DisciplineRepository(
+                Path.Combine(storageDirectory, "disciplines.json"),
+                lifecycleManagement));
+
+            repositories.Add(typeof(IDisciplineSessionRepository), new DisciplineSessionRepository(
+                Path.Combine(storageDirectory, "disciplineSessions.json"),
+                lifecycleManagement));
+
+            repositories.Add(typeof(IPerformanceEntryRepository), new PerformanceEntryRepository(
+                Path.Combine(storageDirectory, "performances.json"),
+                lifecycleManagement));
+
+            repositories.Add(typeof(IScoreBoardRepository), new ScoreBoardRepository(
+                Path.Combine(storageDirectory, "scoreBoards.json"),
+                lifecycleManagement));
+
+            repositories.Add(typeof(IScoreEntryRepository), new ScoreEntryRepository(
+                Path.Combine(storageDirectory, "scoreEntries.json"),
+                lifecycleManagement));
+
+            repositories.Add(typeof(IStartListEntryRepository), new StartListEntryRepository(
+                Path.Combine(storageDirectory, "startListEntries.json"),
+                lifecycleManagement));
+
+            repositories.Add(typeof(IWheelRepository), new WheelRepository(
+                Path.Combine(storageDirectory, "wheels.json"),
+                lifecycleManagement));
         }
 
         /// <inheritdoc/>
