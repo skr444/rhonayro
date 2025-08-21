@@ -25,8 +25,6 @@ namespace RhonAyro.Client.Desktop.Ui
 
         public App()
         {
-            InitializeComponent();
-
             storageDirectory = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 AppName);
