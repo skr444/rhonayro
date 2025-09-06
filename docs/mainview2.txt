@@ -1,0 +1,37 @@
+<Window.Resources>
+    <!-- Sort newest-first -->
+    <CollectionViewSource x:Key="LogView" Source="{Binding LogEntries}">
+        <CollectionViewSource.SortDescriptions>
+            <scm:SortDescription PropertyName="Timestamp" Direction="Descending"/>
+        </CollectionViewSource.SortDescriptions>
+    </CollectionViewSource>
+
+    <!-- Level → Brush converter (optional) -->
+    <local:LogLevelToBrushConverter x:Key="LevelBrush"/>
+</Window.Resources>
+
+<ListBox ItemsSource="{Binding Source={StaticResource LogView}}"
+         FontFamily="Consolas"
+         VirtualizingPanel.IsVirtualizing="True"
+         VirtualizingPanel.VirtualizationMode="Recycling"
+         ScrollViewer.CanContentScroll="True"
+         ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+            <VirtualizingStackPanel/>
+        </ItemsPanelTemplate>
+    </ListBox.ItemsPanel>
+
+    <ListBox.ItemTemplate>
+        <DataTemplate DataType="{x:Type local:LogEntry}">
+            <TextBlock TextWrapping="NoWrap">
+                <Run Text="{Binding Timestamp, StringFormat={}{0:HH:mm:ss.fff}}"/>
+                <Run Text=" " />
+                <Run Text="["/>
+                <Run Text="{Binding Level}" Foreground="{Binding Level, Converter={StaticResource LevelBrush}}"/>
+                <Run Text="] " />
+                <Run Text="{Binding Message}"/>
+            </TextBlock>
+        </DataTemplate>
+    </ListBox.ItemTemplate>
+</ListBox>

@@ -49,11 +49,11 @@
         <DataTemplate DataType="{x:Type nav:TabItemHost}" x:Key="TabHeaderTemplate">
             <DockPanel LastChildFill="False" Margin="4,0">
                 <TextBlock Text="{Binding Header}" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                <Button Content="X"
+                <!--<Button Content="X"
                         Width="18" Height="18" Padding="0"
                         Command="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource AncestorType=TabControl}}"
                         CommandParameter="{Binding}"
-                        ToolTip="Close"/>
+                        ToolTip="Close"/>-->
             </DockPanel>
         </DataTemplate>
 
