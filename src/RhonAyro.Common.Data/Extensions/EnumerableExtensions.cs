@@ -19,12 +19,7 @@ namespace RhonAyro.Common.Data.Extensions
         /// <returns>A custom string representation of a sequence of objects.</returns>
         public static string ToCustomString<T>(this IEnumerable<T> source, Func<T, string> transformer = null!, string separator = ", ")
         {
-            if (source == null)
-            {
-                return null;
-            }
-
-            if (!source.Any())
+            if ((source == null) || !source.Any())
             {
                 return String.Empty;
             }

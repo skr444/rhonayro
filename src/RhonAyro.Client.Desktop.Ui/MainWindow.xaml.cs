@@ -20,7 +20,10 @@ namespace RhonAyro.Client.Desktop.Ui
             Loaded += (_, __) =>
             {
                 var nav = Ioc.Default.GetService<INavigationService>()!;
-                nav.OpenOrActivate<PreparationViewModel>("Preparation", "prep");
+                nav.OpenOrActivate<PreparationViewModel>("Preparation", "preparation");
+                nav.OpenOrActivate<StartListViewModel>("Start List", "startlist");
+                nav.OpenOrActivate<CompetitionViewModel>("Competition", "competition");
+                nav.OpenOrActivate<PreparationViewModel>("Preparation", "preparation");
             };
         }
     }

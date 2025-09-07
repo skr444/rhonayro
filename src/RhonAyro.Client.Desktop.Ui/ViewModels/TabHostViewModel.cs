@@ -14,14 +14,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         /// </summary>
         public ObservableCollection<TabItemHost> Tabs { get; }
 
-        private readonly INavigationService navigation;
-
         [ObservableProperty]
         private TabItemHost? selectedTab;
 
-        public TabHostViewModel(INavigationService nav)
+        public TabHostViewModel()
         {
-            navigation = nav;
             Tabs = [];
         }
 
@@ -40,15 +37,5 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 SelectedTab = Tabs[^1]; // fallback selection
             }
         }
-
-        // Convenience commands to open key tabs again (e.g., via menu/toolbar)
-        [RelayCommand]
-        private void OpenPreparation() => navigation.OpenOrActivate<PreparationViewModel>("Preparation", "prep");
-        [RelayCommand]
-        private void OpenStartList() => navigation.OpenOrActivate<StartListViewModel>("Start List", "startlist");
-        [RelayCommand]
-        private void OpenCompetition() => navigation.OpenOrActivate<CompetitionViewModel>("Competition", "competition");
-        [RelayCommand]
-        private void OpenScoreboard() => navigation.OpenOrActivate<ScoreboardViewModel>("Scoreboard", "scoreboard");
     }
 }

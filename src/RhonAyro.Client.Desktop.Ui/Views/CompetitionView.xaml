@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="RhonAyro.Client.Desktop.Ui.Views.CompetitionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RhonAyro.Client.Desktop.Ui.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Choose discipline -->
+        <Grid Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="Choose discipline"
+                   VerticalContentAlignment="Center"
+                   HorizontalContentAlignment="Center"
+                   FontSize="16"/>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="5">
+                <RadioButton Content="Straight basic"
+                             Margin="0 0 25 0"/>
+                <RadioButton Content="Straight advanced"
+                             Margin="0 0 25 0"/>
+                <RadioButton Content="Jump"
+                             Margin="0 0 25 0"/>
+                <RadioButton Content="Spiral"
+                             Margin="0 0 25 0"/>
+                <RadioButton Content="Pair"
+                             Margin="0 0 25 0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -9,16 +9,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="9*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="11*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10*"/>
-            <ColumnDefinition Width="4*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- Choose discipline -->
-        <Grid Grid.ColumnSpan="2">
+
+        <!-- Discipline filter -->
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="10*"/>
@@ -33,6 +28,8 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="5">
+                <RadioButton Content="All"
+                             Margin="0 0 25 0"/>
                 <RadioButton Content="Straight basic"
                              Margin="0 0 25 0"/>
                 <RadioButton Content="Straight advanced"
@@ -45,80 +42,144 @@
                              Margin="0 0 25 0"/>
             </StackPanel>
         </Grid>
-        
-        <!-- Create roster -->
+
+        <!-- Main -->
         <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
+            
             <!-- Create roster -->
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="7*"/>
-                </Grid.RowDefinitions>
-                <Label Content="Select competitor"
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- Competitors -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="7*"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Select competitor"
                        HorizontalContentAlignment="Center"
                        VerticalContentAlignment="Center"
                        FontWeight="Bold"/>
-                <DataGrid Grid.Row="1"/>
-            </Grid>
-            <!-- Create roster -->
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="60"/>
-                </Grid.RowDefinitions>
-                <Label Content="Specify wheel size"
+                    <DataGrid Grid.Row="1"/>
+                </Grid>
+                <!-- Coaches -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="7*"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Select coach"
                        HorizontalContentAlignment="Center"
                        VerticalContentAlignment="Center"
                        FontWeight="Bold"/>
-                <TextBox Grid.Row="1"
-                         Text="Hello"
+                    <DataGrid Grid.Row="1"/>
+                </Grid>
+                <!-- Wheel size -->
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <!-- Top label -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Wheel size -->
+                        <RowDefinition Height="15"/>
+                        <!-- Gap -->
+                        <RowDefinition Height="30"/>
+                        <!-- Discipline label -->
+                        <RowDefinition Height="5*"/>
+                        <!-- Disciplines -->
+                        <RowDefinition Height="15"/>
+                        <!-- Gap -->
+                        <RowDefinition Height="30"/>
+                        <!-- Start no label -->
+                        <RowDefinition Height="auto"/>
+                        <!-- Start no -->
+                        <RowDefinition Height="*"/>
+                        <!-- Button up -->
+                        <RowDefinition Height="*"/>
+                        <!-- Button down -->
+                    </Grid.RowDefinitions>
+                    <Label Content="Specify wheel size"
+                       HorizontalContentAlignment="Center"
+                       VerticalContentAlignment="Center"
+                       FontWeight="Bold"/>
+                    <TextBox Grid.Row="1"
+                         Text="210"
+                         Height="60"
                          HorizontalContentAlignment="Center"
                          VerticalContentAlignment="Center"
                          FontSize="25"
                          FontWeight="Bold"/>
+                    <Label Grid.Row="3"
+                       Content="Choose discipline"
+                       VerticalContentAlignment="Center"
+                       HorizontalContentAlignment="Center"
+                       FontWeight="Bold"/>
+                    <StackPanel Grid.Row="4"
+                            Orientation="Vertical"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Margin="5">
+                        <RadioButton Content="Straight basic"
+                             Margin="0 0 0 5"/>
+                        <RadioButton Content="Straight advanced"
+                             Margin="0 0 0 5"/>
+                        <RadioButton Content="Jump"
+                             Margin="0 0 0 5"/>
+                        <RadioButton Content="Spiral"
+                             Margin="0 0 0 5"/>
+                        <RadioButton Content="Pair"
+                             Margin="0 0 0 5"/>
+                    </StackPanel>
+                    <Label Grid.Row="6"
+                       Content="Start number"
+                       HorizontalContentAlignment="Center"
+                       VerticalContentAlignment="Center"
+                       FontWeight="Bold"/>
+                    <Label Grid.Row="7"
+                       Content="3"
+                       Height="60"
+                       HorizontalContentAlignment="Center"
+                       VerticalContentAlignment="Center"
+                       FontSize="25"
+                       FontWeight="Bold"/>
+                    <Button Grid.Row="8"
+                        Content="Up"/>
+                    <Button Grid.Row="9"
+                        Content="Down"/>
+                </Grid>
             </Grid>
-            <!-- Create roster -->
-            <Grid Grid.Column="2">
+
+            <!-- Start list-->
+            <Grid Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="7*"/>
                 </Grid.RowDefinitions>
-                <Label Content="Select coach"
+                <Label Content="Roster"
                        HorizontalContentAlignment="Center"
                        VerticalContentAlignment="Center"
                        FontWeight="Bold"/>
                 <DataGrid Grid.Row="1"/>
             </Grid>
-        </Grid>
-        
-        <!-- Start list-->
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="7*"/>
-            </Grid.RowDefinitions>
-            <Label Content="Roster"
-                       HorizontalContentAlignment="Center"
-                       VerticalContentAlignment="Center"
-                       FontWeight="Bold"/>
-            <DataGrid Grid.Row="1"/>
-        </Grid>
 
-        <Label Grid.Row="1" Grid.Column="1"
-               Content=""/>
-
-        <Button Grid.Row="3"
+            <Button Grid.Row="3"
                 Margin="10"
                 Content="Add to start list"/>
 
-        <Button Grid.Row="3" Grid.Column="1"
+            <Button Grid.Row="3" Grid.Column="1"
                 Margin="10"
                 Content="Remove from start list"/>
-
+        </Grid>
     </Grid>
 </UserControl>
