@@ -9,7 +9,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="11*"/>
+            <RowDefinition Height="13*"/>
         </Grid.RowDefinitions>
 
         <!-- Discipline filter -->
@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="10*"/>
             </Grid.ColumnDefinitions>
 
-            <Label Content="Choose discipline"
+            <Label Content="Discipline filter"
                    VerticalContentAlignment="Center"
                    HorizontalContentAlignment="Center"
                    FontSize="16"/>
@@ -46,7 +46,7 @@
         <!-- Main -->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="9*"/>
+                <RowDefinition Height="10*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -68,9 +68,9 @@
                         <RowDefinition Height="7*"/>
                     </Grid.RowDefinitions>
                     <Label Content="Select competitor"
-                       HorizontalContentAlignment="Center"
-                       VerticalContentAlignment="Center"
-                       FontWeight="Bold"/>
+                           HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           FontWeight="Bold"/>
                     <DataGrid Grid.Row="1"/>
                 </Grid>
                 <!-- Coaches -->
@@ -80,88 +80,80 @@
                         <RowDefinition Height="7*"/>
                     </Grid.RowDefinitions>
                     <Label Content="Select coach"
-                       HorizontalContentAlignment="Center"
-                       VerticalContentAlignment="Center"
-                       FontWeight="Bold"/>
+                           HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           FontWeight="Bold"/>
                     <DataGrid Grid.Row="1"/>
                 </Grid>
                 <!-- Wheel size -->
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <!-- Top label -->
-                        <RowDefinition Height="auto"/>
-                        <!-- Wheel size -->
-                        <RowDefinition Height="15"/>
-                        <!-- Gap -->
-                        <RowDefinition Height="30"/>
-                        <!-- Discipline label -->
-                        <RowDefinition Height="5*"/>
-                        <!-- Disciplines -->
-                        <RowDefinition Height="15"/>
-                        <!-- Gap -->
-                        <RowDefinition Height="30"/>
-                        <!-- Start no label -->
-                        <RowDefinition Height="auto"/>
-                        <!-- Start no -->
-                        <RowDefinition Height="*"/>
-                        <!-- Button up -->
-                        <RowDefinition Height="*"/>
-                        <!-- Button down -->
+                        <RowDefinition Height="30"/> <!-- Top label -->
+                        <RowDefinition Height="auto"/> <!-- Wheel size -->
+                        <RowDefinition Height="15"/> <!-- Gap -->
+                        <RowDefinition Height="30"/> <!-- Discipline label -->
+                        <RowDefinition Height="5*"/> <!-- Disciplines -->
+                        <RowDefinition Height="15"/> <!-- Gap -->
+                        <RowDefinition Height="30"/> <!-- Start no label -->
+                        <RowDefinition Height="auto"/> <!-- Start no -->
+                        <RowDefinition Height="*"/> <!-- Button up -->
+                        <RowDefinition Height="*"/> <!-- Button down -->
                     </Grid.RowDefinitions>
                     <Label Content="Specify wheel size"
-                       HorizontalContentAlignment="Center"
-                       VerticalContentAlignment="Center"
-                       FontWeight="Bold"/>
+                           HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           FontWeight="Bold"/>
                     <TextBox Grid.Row="1"
-                         Text="210"
-                         Height="60"
-                         HorizontalContentAlignment="Center"
-                         VerticalContentAlignment="Center"
-                         FontSize="25"
-                         FontWeight="Bold"/>
+                             Text="210"
+                             Height="60"
+                             HorizontalContentAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             FontSize="25"
+                             FontWeight="Bold"/>
                     <Label Grid.Row="3"
-                       Content="Choose discipline"
-                       VerticalContentAlignment="Center"
-                       HorizontalContentAlignment="Center"
-                       FontWeight="Bold"/>
+                           Content="Choose disciplines"
+                           VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Center"
+                           FontWeight="Bold"/>
                     <StackPanel Grid.Row="4"
-                            Orientation="Vertical"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"
-                            Margin="5">
-                        <RadioButton Content="Straight basic"
-                             Margin="0 0 0 5"/>
-                        <RadioButton Content="Straight advanced"
-                             Margin="0 0 0 5"/>
-                        <RadioButton Content="Jump"
-                             Margin="0 0 0 5"/>
-                        <RadioButton Content="Spiral"
-                             Margin="0 0 0 5"/>
-                        <RadioButton Content="Pair"
-                             Margin="0 0 0 5"/>
+                                Orientation="Vertical"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Margin="5">
+                        <StackPanel.Resources>
+                            <Style TargetType="CheckBox">
+                                <Setter Property="Margin" Value="0 0 0 5"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <CheckBox Content="Straight basic"/>
+                        <CheckBox Content="Straight advanced"/>
+                        <CheckBox Content="Jump"/>
+                        <CheckBox Content="Spiral"/>
+                        <CheckBox Content="Pair"/>
                     </StackPanel>
                     <Label Grid.Row="6"
-                       Content="Start number"
-                       HorizontalContentAlignment="Center"
-                       VerticalContentAlignment="Center"
-                       FontWeight="Bold"/>
+                           Content="Start number"
+                           HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           FontWeight="Bold"/>
                     <Label Grid.Row="7"
-                       Content="3"
-                       Height="60"
-                       HorizontalContentAlignment="Center"
-                       VerticalContentAlignment="Center"
-                       FontSize="25"
-                       FontWeight="Bold"/>
+                           Content="3"
+                           Height="60"
+                           HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           FontSize="25"
+                           FontWeight="Bold"/>
                     <Button Grid.Row="8"
-                        Content="Up"/>
+                            Content="Up"
+                            Margin="10 2 10 2"/>
                     <Button Grid.Row="9"
-                        Content="Down"/>
+                            Content="Down"
+                            Margin="10 2 10 2"/>
                 </Grid>
             </Grid>
 
             <!-- Start list-->
-            <Grid Grid.Row="1" Grid.Column="1">
+            <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="7*"/>
@@ -174,12 +166,12 @@
             </Grid>
 
             <Button Grid.Row="3"
-                Margin="10"
-                Content="Add to start list"/>
+                    Margin="10"
+                    Content="Add to start list"/>
 
             <Button Grid.Row="3" Grid.Column="1"
-                Margin="10"
-                Content="Remove from start list"/>
+                    Margin="10"
+                    Content="Remove from start list"/>
         </Grid>
     </Grid>
 </UserControl>

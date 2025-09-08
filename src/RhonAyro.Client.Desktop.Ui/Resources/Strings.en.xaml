@@ -1,0 +1,50 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <!-- Global-->
+    <sys:String x:Key="DisciplineStraightBasic">Straight basic</sys:String>
+    <sys:String x:Key="DisciplineStraightAdvanced">Straight advanced</sys:String>
+    <sys:String x:Key="DisciplineJump">Jump</sys:String>
+    <sys:String x:Key="DisciplineSpiral">Spiral</sys:String>
+    <sys:String x:Key="DisciplinePair">Pair</sys:String>
+    <sys:String x:Key="PreviousButtonText">Prev.</sys:String>
+    <sys:String x:Key="NextButtonText">Next</sys:String>
+
+    <!-- PreparationView -->
+    <sys:String x:Key="PreparationView_SetDateTitleLabel">Set the competition date and start time</sys:String>
+    <sys:String x:Key="PreparationView_DatePickerText">Select a date</sys:String>
+    <sys:String x:Key="PreparationView_SelectedDateLabel">Selected Date and Time:</sys:String>
+    <sys:String x:Key="PreparationView_DateImportTitleLabel">Data import</sys:String>
+    <sys:String x:Key="PreparationView_OpenFileButtonText">Open file...</sys:String>
+    <sys:String x:Key="PreparationView_SelectedImportFileLabel">Selected file:</sys:String>
+    <sys:String x:Key="PreparationView_HostLogoTitleLabel">Host logo</sys:String>
+    <sys:String x:Key="PreparationView_OpenHostLogoButtonText">Open file...</sys:String>
+    <sys:String x:Key="PreparationView_SponsorLogosTitleLabel">Sponsor logos</sys:String>
+    <sys:String x:Key="PreparationView_OpenSponsorLogoButtonText">Open file...</sys:String>
+    
+    <!-- StartListView -->
+    <sys:String x:Key="StartListView_DisciplineFilterLabel">Discipline filter</sys:String>
+    <sys:String x:Key="StartListView_AllDisciplineFilterLabel">All</sys:String>
+    <sys:String x:Key="StartListView_SelectContestantLabel">Select contestant</sys:String>
+    <sys:String x:Key="StartListView_SelectCoachLabel">Select coach</sys:String>
+    <sys:String x:Key="StartListView_SpecifyWheelSizeLabel">Specify wheel size</sys:String>
+    <sys:String x:Key="StartListView_ChooseDisciplinesLabel">Choose disciplines</sys:String>
+    <sys:String x:Key="StartListView_StartNumberLabel">Start number</sys:String>
+    <sys:String x:Key="StartListView_UpButtonText">Up</sys:String>
+    <sys:String x:Key="StartListView_DownButtonText">Down</sys:String>
+    <sys:String x:Key="StartListView_AddToStartListButtonText">Add to start list</sys:String>
+    <sys:String x:Key="StartListView_RemoveFromStartListButtonText">Remove from start list</sys:String>
+    <sys:String x:Key="StartListView_RosterLabel">Roster</sys:String>
+    
+    <!-- CompetitionView -->
+    <sys:String x:Key="CompetitionView_AthleteLabel">Athlete</sys:String>
+    <sys:String x:Key="CompetitionView_CoachLabel">Coach</sys:String>
+    <sys:String x:Key="CompetitionView_WheelSizeLabel">Wheel size</sys:String>
+    <sys:String x:Key="CompetitionView_DifficultyLabel">Difficulty</sys:String>
+    <sys:String x:Key="CompetitionView_Juror1Label">Juror 1</sys:String>
+    <sys:String x:Key="CompetitionView_Juror2Label">Juror 2</sys:String>
+    <sys:String x:Key="CompetitionView_Juror3Label">Juror 3</sys:String>
+    <sys:String x:Key="CompetitionView_Juror4Label">Juror 4</sys:String>
+    <sys:String x:Key="CompetitionView_ResultScoreLabel">Result score</sys:String>
+</ResourceDictionary>
