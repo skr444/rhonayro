@@ -1,10 +1,20 @@
 @startuml
 
-class ClubMember {
+abstract class Entity {
     + Id : Guid
+    + Created : DateTime
+    + Modified : DateTime
+}
+
+class Competition {
+    + EventStart : DateTime
+    + Disciplines : DisciplineSession
+}
+
+class ClubMember {
     + FirstName : string
     + LastName : string
-    + Roles : MemberRole[]
+    + Roles : MemberRole
 }
 
 enum MemberRole {
@@ -29,7 +39,6 @@ class StartListEntry {
 class DisciplineSession {
     + Discipline : Discipline
     + Juror : ClubMember
-    + Performances : PerformanceEntry[]
     + ScoreBoard : ScoreBoard
 }
 
@@ -53,16 +62,26 @@ class Wheel {
     + Size : float
 }
 
+Entity <|-- Competition
+Entity <|-- DisciplineSession
+Entity <|-- Discipline
+Entity <|-- ScoreBoard
+Entity <|-- PerformanceEntry
+Entity <|-- StartListEntry
+Entity <|-- ClubMember
+Entity <|-- Wheel
+Entity <|-- ScoreEntry
+
+Competition "1" o.. "0..*" DisciplineSession : Disciplines
 ClubMember "1" o.. "1..*" MemberRole : Role
 StartListEntry "1" *.. "1" ClubMember : Athlete
 StartListEntry "1" *.. "1" ClubMember : Coach
 StartListEntry "1" *.. "1" Wheel : Wheel
 DisciplineSession "1" *.. "1" Discipline : Discipline
 DisciplineSession "1" *.. "1" ClubMember : Juror
-DisciplineSession "1" o.. "0..*" PerformanceEntry : Performances
 DisciplineSession "1" *.. "1" ScoreBoard : ScoreBoard
 PerformanceEntry "1" *.. "1" StartListEntry : Athlete
-PerformanceEntry "1" o.. "0..*" ScoreEntry : ScoreValues
+PerformanceEntry "1" o.right. "0..*" ScoreEntry : ScoreValues
 ScoreBoard "1" o.. "0..*" PerformanceEntry : HighScore
 
 @enduml

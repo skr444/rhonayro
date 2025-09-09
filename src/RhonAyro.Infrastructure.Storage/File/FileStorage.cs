@@ -60,6 +60,10 @@ namespace RhonAyro.Infrastructure.Storage.File
                 Path.Combine(storageDirectory, "wheels.json"),
                 lifecycleManagement));
 
+            repositories.Add(typeof(ICompetitionRepository), new CompetitionRepository(
+                Path.Combine(storageDirectory, "competitions.json"),
+                lifecycleManagement));
+
             repositories.Add(typeof(IViewStateRepository), new ViewStateRepository(
                 Path.Combine(storageDirectory, "viewstate.json"), lifecycleManagement));
         }

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-
-using RhonAyro.Common.Data.Extensions;
-
-namespace RhonAyro.Common.Data.ScoreKeeping
+﻿namespace RhonAyro.Common.Data.ScoreKeeping
 {
     /// <summary>
     /// Represents a person involved in a wheel gymnastics competition.
@@ -22,7 +18,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <summary>
         /// Gets or sets the roles this person have.
         /// </summary>
-        public ICollection<RoleType> Roles { get; set; }
+        public RoleType Roles { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="ClubMember"/>.
@@ -31,13 +27,13 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         {
             FirstName = null;
             LastName = null;
-            Roles = new HashSet<RoleType>();
+            Roles = RoleType.Unspecified;
         }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{base.ToString()}, FirstName='{FirstName}', LastName='{LastName}', Roles='{Roles.ToCustomString(x => $"{x}", " | ")}'";
+            return $"{base.ToString()}, FirstName='{FirstName}', LastName='{LastName}', Roles='{Roles}'";
         }
     }
 }

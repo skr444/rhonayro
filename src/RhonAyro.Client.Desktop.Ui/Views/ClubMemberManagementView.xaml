@@ -21,8 +21,7 @@
                   IsReadOnly="False"
                   behaviors:DataGridBehaviors.RowEditEndingCommand="{Binding SaveRowCommand}">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}"
-                            IsReadOnly="False">
+                <DataGridTextColumn Binding="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="First name"/>
@@ -30,8 +29,7 @@
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Binding="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"
-                            IsReadOnly="False">
+                <DataGridTextColumn Binding="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="Last name"/>
@@ -39,14 +37,34 @@
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
 
-                <!-- Roles as text for now; replace with a ComboBox column later -->
-                <DataGridTextColumn Binding="{Binding Roles}" IsReadOnly="False">
-                    <DataGridTextColumn.HeaderTemplate>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="Roles"/>
                         </DataTemplate>
-                    </DataGridTextColumn.HeaderTemplate>
-                </DataGridTextColumn>
+                    </DataGridTemplateColumn.HeaderTemplate>
+
+                    <!-- Display mode -->
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding RolesDisplay}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                    <!-- Edit mode -->
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="Athlete"
+                                          IsChecked="{Binding IsAthlete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Content="Coach"
+                                          IsChecked="{Binding IsCoach, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Content="Juror"
+                                          IsChecked="{Binding IsJuror, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
 
                 <!-- Delete button column -->
                 <DataGridTemplateColumn Width="Auto">
@@ -58,9 +76,9 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="Delete"
-                            Padding="8,2"
-                            Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                            CommandParameter="{Binding}"/>
+                                    Padding="8,2"
+                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

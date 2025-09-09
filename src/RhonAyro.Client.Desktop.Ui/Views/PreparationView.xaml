@@ -13,86 +13,89 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="7"/>
-            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="11*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Event date -->
-        <Grid>
+        <!-- Event -->
+        <Grid Grid.RowSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="10*"/>
             </Grid.RowDefinitions>
             
-            <Rectangle Grid.RowSpan="4"
+            <Rectangle Grid.RowSpan="7"
                        Fill="Transparent"
                        Stroke="Black"/>
-            <Label Content="Set the competition date and start time"
+            <Label Content="Wheel gymnastics competition"
                    VerticalContentAlignment="Center"
                    HorizontalContentAlignment="Center"
                    Margin="0"
                    FontSize="20"/>
-            <DatePicker Grid.Row="1"
-                        Margin="10"
-                        FontSize="15"
-                        VerticalContentAlignment="Center"
-                        HorizontalContentAlignment="Center"/>
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="7*"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Selected Date and Time:"
-                       VerticalContentAlignment="Center"
-                       HorizontalContentAlignment="Center"/>
-                <Label Grid.Column="1"
-                       Content="some date time"
-                       VerticalContentAlignment="Center"
-                       HorizontalContentAlignment="Center"
-                       FontSize="18"
-                       FontWeight="Bold"/>
+            <Grid Grid.Row="1">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <DatePicker Margin="5"
+                                FontSize="15"
+                                VerticalContentAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                SelectedDate="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <ComboBox Margin="5"
+                              Width="60"
+                              VerticalContentAlignment="Center"
+                              HorizontalContentAlignment="Center"
+                              ItemsSource="{Binding Hours}"
+                              SelectedItem="{Binding StartHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text=":" Margin="4 0" VerticalAlignment="Center"/>
+                    <ComboBox Margin="5"
+                              Width="60"
+                              VerticalContentAlignment="Center"
+                              HorizontalContentAlignment="Center"
+                              ItemsSource="{Binding Minutes}"
+                              SelectedItem="{Binding StartMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
             </Grid>
-        </Grid>
+            <StackPanel Grid.Row="2"
+                        Margin="0 0 0 10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="10*"/>
+                    </Grid.ColumnDefinitions>
 
-        <!-- Data import -->
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="2*"/>
-            </Grid.RowDefinitions>
-            
-            <Rectangle Grid.RowSpan="4"
-                       Fill="Transparent"
-                       Stroke="Black"/>
-            <Label Content="Data import"
-                   VerticalContentAlignment="Center"
-                   HorizontalContentAlignment="Center"
-                   Margin="0"
-                   FontSize="20"/>
-            <Button Grid.Row="1"
-                    Margin="10"
-                    Content="Open file..."/>
-            <Grid Grid.Row="2">
+                    <Label Content="Competition id"/>
+                    <Label Grid.Column="1"
+                           Content="{Binding ActiveCompetitionId}"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="10*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Competition date"/>
+                    <Label Grid.Column="1"
+                           Content="{Binding EventStart}"/>
+                </Grid>
+            </StackPanel>
+            <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="7*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Selected file:"
-                       VerticalContentAlignment="Center"
-                       HorizontalContentAlignment="Center"/>
-                <Label Grid.Column="1"
-                       Content="C:\somefolder\notherone\hell\data.csv"
-                       VerticalContentAlignment="Center"
-                       HorizontalContentAlignment="Center"
-                       FontSize="11"
-                       FontFamily="Consolas"
-                       FontWeight="DemiBold"/>
+
+                <Button Grid.ColumnSpan="2"
+                        Content="New event"
+                        Margin="6 0"/>
             </Grid>
+            <DataGrid Grid.Row="6">
+                
+            </DataGrid>
         </Grid>
 
         <!-- Host logo -->

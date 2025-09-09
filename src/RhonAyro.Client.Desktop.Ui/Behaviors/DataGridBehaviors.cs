@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace RhonAyro.Client.Desktop.Ui.Behaviors
 {
@@ -49,16 +51,15 @@ namespace RhonAyro.Client.Desktop.Ui.Behaviors
                 return;
             }
 
-            // Ensure bindings push their latest values before we persist
-            dg.CommitEdit(DataGridEditingUnit.Row, true);
-
-            var cmd = GetRowEditEndingCommand(dg);
             var item = e.Row?.Item;
 
-            if (cmd?.CanExecute(item) == true)
+            // Defer execution until after the edit pipeline completes
+            dg.Dispatcher.BeginInvoke(new Action(() =>
             {
-                cmd.Execute(item);
-            }
+                var cmd = GetRowEditEndingCommand(dg);
+                if (cmd?.CanExecute(item) == true)
+                    cmd.Execute(item);
+            }), DispatcherPriority.Background);
         }
     }
 }
