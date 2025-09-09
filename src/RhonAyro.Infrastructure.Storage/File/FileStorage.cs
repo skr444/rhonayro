@@ -59,6 +59,9 @@ namespace RhonAyro.Infrastructure.Storage.File
             repositories.Add(typeof(IWheelRepository), new WheelRepository(
                 Path.Combine(storageDirectory, "wheels.json"),
                 lifecycleManagement));
+
+            repositories.Add(typeof(IViewStateRepository), new ViewStateRepository(
+                Path.Combine(storageDirectory, "viewstate.json"), lifecycleManagement));
         }
 
         /// <inheritdoc/>

@@ -5,7 +5,7 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
     /// <summary>
     /// Represents a tab on the main view.
     /// </summary>
-    public sealed class TabItemHost
+    internal sealed class TabItemHost
     {
         /// <summary>
         /// Gets the display title in the tab header.

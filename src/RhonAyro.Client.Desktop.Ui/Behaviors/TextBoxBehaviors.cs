@@ -22,7 +22,10 @@ namespace RhonAyro.Client.Desktop.Ui.Behaviors
 
         private static void OnDigitsOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not TextBox tb) return;
+            if (d is not TextBox tb)
+            {
+                return;
+            }
 
             if ((bool)e.NewValue)
             {
@@ -56,7 +59,9 @@ namespace RhonAyro.Client.Desktop.Ui.Behaviors
         {
             // Block space; allow editing/navigation keys
             if (e.Key == Key.Space)
+            {
                 e.Handled = true;
+            }
             // All other keys (Backspace, Delete, Tab, arrows, Home/End) pass through
         }
 
@@ -70,7 +75,9 @@ namespace RhonAyro.Client.Desktop.Ui.Behaviors
 
             var text = e.SourceDataObject.GetData(DataFormats.Text) as string ?? string.Empty;
             if (!IsAllDigits(text))
+            {
                 e.CancelCommand(); // silently ignore
+            }
         }
 
         private static void OnPreviewDragOver(object sender, DragEventArgs e)
@@ -100,7 +107,9 @@ namespace RhonAyro.Client.Desktop.Ui.Behaviors
 
             var text = e.Data.GetData(DataFormats.Text) as string ?? string.Empty;
             if (!IsAllDigits(text))
+            {
                 e.Handled = true; // ignore drop
+            }
         }
 
         private static bool IsAllDigits(string s) => s.All(char.IsDigit);

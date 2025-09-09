@@ -65,6 +65,9 @@
         </DataTemplate>
 
         <!-- VM→View mappings -->
+        <DataTemplate DataType="{x:Type vm:ClubMemberManagementViewModel}">
+            <view:ClubMemberManagementView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:PreparationViewModel}">
             <view:PreparationView/>
         </DataTemplate>

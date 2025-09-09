@@ -4,10 +4,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using RhonAyro.Client.Desktop.Ui.Navigation;
+using RhonAyro.Infrastructure.Runtime.Api;
 
 namespace RhonAyro.Client.Desktop.Ui.ViewModels
 {
-    internal partial class TabHostViewModel : ObservableObject
+    internal partial class TabHostViewModel : BaseViewModel
     {
         /// <summary>
         /// Gets the open tabs.
@@ -17,7 +18,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         [ObservableProperty]
         private TabItemHost? selectedTab;
 
-        public TabHostViewModel()
+        public TabHostViewModel(ILifecycleManager lifecycleManagement) : base(lifecycleManagement)
         {
             Tabs = [];
         }
@@ -36,6 +37,12 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 SelectedTab = Tabs[^1]; // fallback selection
             }
+        }
+
+        public override bool ProcessCloseRequest()
+        {
+            lifecycleManager.Cancel();
+            return true;
         }
     }
 }

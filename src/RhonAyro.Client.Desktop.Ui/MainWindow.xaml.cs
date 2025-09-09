@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 
@@ -17,13 +18,27 @@ namespace RhonAyro.Client.Desktop.Ui
             InitializeComponent();
             DataContext = Ioc.Default.GetService<TabHostViewModel>();
 
+            if (DataContext is BaseViewModel vm)
+            {
+                vm.CloseRequested += (_, _) => Close();
+            }
+
+            Closing += (object? _, CancelEventArgs e) =>
+            {
+                if (DataContext is BaseViewModel vm)
+                {
+                    e.Cancel = !vm.ProcessCloseRequest();
+                }
+            };
+
             Loaded += (_, __) =>
             {
                 var nav = Ioc.Default.GetService<INavigationService>()!;
+                nav.OpenOrActivate<ClubMemberManagementViewModel>("Members", "members");
                 nav.OpenOrActivate<PreparationViewModel>("Preparation", "preparation");
                 nav.OpenOrActivate<StartListViewModel>("Start List", "startlist");
                 nav.OpenOrActivate<CompetitionViewModel>("Competition", "competition");
-                nav.OpenOrActivate<PreparationViewModel>("Preparation", "preparation");
+                nav.OpenOrActivate<ClubMemberManagementViewModel>("Members", "members");
             };
         }
     }

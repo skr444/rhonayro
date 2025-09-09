@@ -41,6 +41,7 @@ namespace RhonAyro.Client.Desktop.Ui
                 .AddSingleton<ILifecycleManager, LifecycleManager>(_ => lifecycleManager)
                 .AddSingleton<IFileStorage, FileStorage>(_ => new FileStorage(storageDirectory, lifecycleManager))
 
+                .AddTransient<ClubMemberManagementViewModel>()
                 .AddTransient<PreparationViewModel>()
                 .AddTransient<StartListViewModel>()
                 .AddTransient<CompetitionViewModel>()
