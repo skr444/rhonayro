@@ -89,11 +89,18 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.ColumnSpan="2"
-                        Content="New event"
-                        Margin="6 0"/>
+                <Button Content="New event"
+                        Margin="6 0"
+                        Command="{Binding NewEventCommand}"/>
+                <Button Grid.Column="1"
+                        Content="Delete event"
+                        Margin="6 0"
+                        Command="{Binding DeleteCompetitionCommand}"/>
             </Grid>
-            <DataGrid Grid.Row="6">
+            <DataGrid Grid.Row="6"
+                      ItemsSource="{Binding Competitions}"
+                      SelectedItem="{Binding SelectedCompetition, Mode=OneWayToSource}"
+                      IsReadOnly="True">
                 
             </DataGrid>
         </Grid>
