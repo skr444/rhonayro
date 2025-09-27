@@ -57,7 +57,7 @@ namespace RhonAyro.Infrastructure.Storage.File
         {
             ArgumentException.ThrowIfNullOrEmpty(key, nameof(key));
 
-            store.Add($"{typeof(TViewModel).Name}.{key}", value);
+            store[$"{typeof(TViewModel).Name}.{key}"] = value;
         }
 
         /// <inheritdoc />
@@ -65,7 +65,7 @@ namespace RhonAyro.Infrastructure.Storage.File
         {
             ArgumentException.ThrowIfNullOrEmpty(key, nameof(key));
 
-            store.Add(key, value);
+            store[key] = value;
         }
 
         /// <inheritdoc />

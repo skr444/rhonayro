@@ -142,38 +142,44 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
         public ObservableCollection<ClubMemberViewModel> Members { get; }
 
+        public ICommand LoadCommand { get; }
+
+        public ICommand SaveRowCommand { get; }
+
+        public ICommand DeleteCommand { get; }
+
         public ClubMemberManagementViewModel(IFileStorage fileStorage)
         {
             clubMemberRepository = fileStorage.GetRepository<IClubMemberRepository>();
             Members = [];
+
+            LoadCommand = new RelayCommand(() =>
+            {
+                Members.Clear();
+                foreach (ClubMember member in clubMemberRepository.All())
+                {
+                    Members.Add(new ClubMemberViewModel(member));
+                }
+            });
+
+            SaveRowCommand = new RelayCommand<object?>(row =>
+            {
+                if (row is ClubMemberViewModel member)
+                {
+                    clubMemberRepository.AddOrUpdate(member.Model);
+                }
+            });
+
+            DeleteCommand = new RelayCommand<object?>(row =>
+            {
+                if (row is not ClubMemberViewModel vm)
+                {
+                    return;
+                }
+
+                Members.Remove(vm);
+                clubMemberRepository.Delete(vm.Id);
+            });
         }
-
-        public ICommand LoadCommand => new RelayCommand(() =>
-        {
-            Members.Clear();
-            foreach (ClubMember member in clubMemberRepository.All())
-            {
-                Members.Add(new ClubMemberViewModel(member));
-            }
-        });
-
-        public ICommand SaveRowCommand => new RelayCommand<object?>(row =>
-        {
-            if (row is ClubMemberViewModel member)
-            {
-                clubMemberRepository.AddOrUpdate(member.Model);
-            }
-        });
-
-        public ICommand DeleteCommand => new RelayCommand<object?>(row =>
-        {
-            if (row is not ClubMemberViewModel vm)
-            {
-                return;
-            }
-
-            Members.Remove(vm);
-            clubMemberRepository.Delete(vm.Id);
-        });
     }
 }

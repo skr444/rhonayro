@@ -23,12 +23,7 @@ namespace RhonAyro.Infrastructure.Storage
         {
             Validate(data);
 
-            if (store.ContainsKey(data.Id))
-            {
-                store.Remove(data.Id);
-            }
-
-            store.Add(data.Id, data);
+            store[data.Id] = data;
 
             data.Modified = DateTime.UtcNow;
             Persist();

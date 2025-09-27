@@ -64,6 +64,10 @@ namespace RhonAyro.Infrastructure.Storage.File
                 Path.Combine(storageDirectory, "competitions.json"),
                 lifecycleManagement));
 
+            repositories.Add(typeof(ILogoRepository), new LogoRepository(
+                Path.Combine(storageDirectory, "logos.json"),
+                lifecycleManagement));
+
             repositories.Add(typeof(IViewStateRepository), new ViewStateRepository(
                 Path.Combine(storageDirectory, "viewstate.json"), lifecycleManagement));
         }

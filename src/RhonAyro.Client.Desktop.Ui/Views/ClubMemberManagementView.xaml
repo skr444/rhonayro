@@ -19,7 +19,8 @@
                   CanUserAddRows="True"
                   CanUserDeleteRows="False"
                   IsReadOnly="False"
-                  behaviors:DataGridBehaviors.RowEditEndingCommand="{Binding SaveRowCommand}">
+                  behaviors:DataGridBehaviors.RowEditEndingCommand="{Binding SaveRowCommand}"
+                  behaviors:FrameworkElementBehaviors.LoadedCommand="{Binding LoadCommand}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
                     <DataGridTextColumn.HeaderTemplate>

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,11 +16,18 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 {
     internal sealed class PreparationViewModel : ObservableObject
     {
+        private const string ActiveCompetitionIdKey = "activeCompetitionId";
+
+        private readonly ICompetitionRepository competitionRepository;
+        private readonly IViewStateRepository viewStateRepository;
+        private readonly ILogoRepository logoRepository;
         private DateTime? startDate;
         private int? startHour;
         private int? startMinute;
-        private readonly ICompetitionRepository competitionRepository;
         private Competition activeCompetition;
+        private Logo hostLogo;
+        private IList<Logo> sponsorLogos;
+        private int sponsorLogoIndex;
 
         public ICollection<Competition> Competitions
         {
@@ -33,12 +43,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     startDate = activeCompetition.EventStart;
                     startHour = activeCompetition.EventStart.Hour;
-                    startMinute = QuantizeMinute(activeCompetition.EventStart.Minute);
+                    startMinute = (int)Quantize(activeCompetition.EventStart.Minute);
                     OnPropertyChanged(nameof(ActiveCompetitionId));
                     OnPropertyChanged(nameof(EventStart));
                     OnPropertyChanged(nameof(StartDate));
                     OnPropertyChanged(nameof(StartHour));
                     OnPropertyChanged(nameof(StartMinute));
+                    viewStateRepository.Save<PreparationViewModel>(ActiveCompetitionIdKey, activeCompetition.Id.ToString());
                 }
             }
         }
@@ -88,9 +99,27 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         public ICommand NewEventCommand { get; }
         public ICommand DeleteCompetitionCommand { get; }
 
+        // logos
+
+        public string HostLogoPath => hostLogo?.Path ?? String.Empty;
+        public byte[] HostLogoImage => hostLogo?.ImageData ?? Array.Empty<byte>();
+
+        public ICommand ImportHostLogoCommand { get; }
+
+        public ICommand ImportSponsorLogoCommand { get; }
+
+        public ICommand RemoveSponsorLogoCommand { get; }
+
+        public ICommand PreviousSponsorLogoCommand { get; }
+
+        public ICommand NextSponsorLogoCommand { get; }
+
         public PreparationViewModel(IFileStorage fileStorage)
         {
             competitionRepository = fileStorage.GetRepository<ICompetitionRepository>();
+            viewStateRepository = fileStorage.GetRepository<IViewStateRepository>();
+            logoRepository = fileStorage.GetRepository<ILogoRepository>();
+
             var competition = competitionRepository.All().FirstOrDefault();
             if (competition == null)
             {
@@ -100,7 +129,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             activeCompetition = competition;
             startDate = activeCompetition.EventStart;
             startHour = activeCompetition.EventStart.Hour;
-            startMinute = activeCompetition.EventStart.Minute;
+            startMinute = (int)Quantize(activeCompetition.EventStart.Minute);
 
             NewEventCommand = new RelayCommand(() =>
             {
@@ -108,7 +137,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 competitionRepository.AddOrUpdate(activeCompetition);
                 startDate = activeCompetition.EventStart;
                 startHour = activeCompetition.EventStart.Hour;
-                startMinute = activeCompetition.EventStart.Minute;
+                startMinute = (int)Quantize(activeCompetition.EventStart.Minute);
                 OnPropertyChanged(nameof(SelectedCompetition));
                 OnPropertyChanged(nameof(ActiveCompetitionId));
                 OnPropertyChanged(nameof(EventStart));
@@ -130,7 +159,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 activeCompetition = next;
                 startDate = activeCompetition.EventStart;
                 startHour = activeCompetition.EventStart.Hour;
-                startMinute = activeCompetition.EventStart.Minute;
+                startMinute = (int)Quantize(activeCompetition.EventStart.Minute);
                 OnPropertyChanged(nameof(SelectedCompetition));
                 OnPropertyChanged(nameof(ActiveCompetitionId));
                 OnPropertyChanged(nameof(EventStart));
@@ -153,9 +182,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        private static int QuantizeMinute(int minute, int resolution = 5)
+        private static double Quantize(double n, double resolution = 5)
         {
-            return (int)Math.Round((double)minute, 0) % 5;
+            var q = n / resolution;
+            q = Math.Round(q, MidpointRounding.AwayFromZero);
+            return q * resolution;
         }
     }
 }
