@@ -9,6 +9,8 @@ using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.Win32;
+
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
 
@@ -167,6 +169,14 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 OnPropertyChanged(nameof(StartHour));
                 OnPropertyChanged(nameof(StartMinute));
                 OnPropertyChanged(nameof(Competitions));
+            });
+
+            ImportHostLogoCommand = new RelayCommand(() =>
+            {
+                var ofd = new OpenFileDialog
+                {
+
+                };
             });
         }
 

@@ -4,6 +4,8 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
+using Microsoft.Win32;
+
 using RhonAyro.Client.Desktop.Ui.ViewModels;
 
 namespace RhonAyro.Client.Desktop.Ui.Navigation
@@ -73,6 +75,32 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
             {
                 tabHost.Tabs.Remove(tab);
             }
+        }
+
+        /// <inheritdoc/>
+        public void OpenFileDialog()
+        {
+            var ofd = new OpenFileDialog
+            {
+                AddExtension = false,
+                AddToRecent = false,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                DefaultDirectory = "",
+                DefaultExt = "",
+                DereferenceLinks = true,
+                Filter = "",
+                FilterIndex = 1,
+                ForcePreviewPane = false,
+                InitialDirectory = "",
+                Multiselect = false,
+                ReadOnlyChecked = false,
+                RootDirectory = "",
+                ShowHiddenItems = false,
+                ShowReadOnly = false,
+                Title = "",
+                ValidateNames = false
+            };
         }
     }
 }

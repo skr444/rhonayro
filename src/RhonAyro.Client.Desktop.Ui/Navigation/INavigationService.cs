@@ -29,5 +29,8 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
         /// </summary>
         /// <param name="viewModel">View to close.</param>
         void Close(object viewModel);
+
+
+        void OpenFileDialog();
     }
 }
