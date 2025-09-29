@@ -78,29 +78,9 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
         }
 
         /// <inheritdoc/>
-        public void OpenFileDialog()
+        public IOpenFileDialog NewOfd()
         {
-            var ofd = new OpenFileDialog
-            {
-                AddExtension = false,
-                AddToRecent = false,
-                CheckFileExists = true,
-                CheckPathExists = true,
-                DefaultDirectory = "",
-                DefaultExt = "",
-                DereferenceLinks = true,
-                Filter = "",
-                FilterIndex = 1,
-                ForcePreviewPane = false,
-                InitialDirectory = "",
-                Multiselect = false,
-                ReadOnlyChecked = false,
-                RootDirectory = "",
-                ShowHiddenItems = false,
-                ShowReadOnly = false,
-                Title = "",
-                ValidateNames = false
-            };
+            return new MyOfd();
         }
     }
 }

@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 using Microsoft.Win32;
 
 namespace RhonAyro.Client.Desktop.Ui.Navigation
 {
-    internal class MyOfd : IOpenFileDialog, IDisposable
+    internal class MyOfd : IOpenFileDialog
     {
-        private OpenFileDialog ofd;
+        private readonly OpenFileDialog ofd;
+        private Window? owner;
 
         public bool AddExtension
         {
@@ -32,6 +30,11 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
             get => ofd.CheckPathExists;
             set => ofd.CheckPathExists = value;
         }
+        public Guid? ClientGuid
+        {
+            get => ofd.ClientGuid;
+            set => ofd.ClientGuid = value;
+        }
         public string DefaultDirectory
         {
             get => ofd.DefaultDirectory;
@@ -46,6 +49,15 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
         {
             get => ofd.DereferenceLinks;
             set => ofd.DereferenceLinks = value;
+        }
+        public string FileName
+        {
+            get => ofd.FileName;
+            set => ofd.FileName = value;
+        }
+        public string[] FileNames
+        {
+            get => ofd.FileNames;
         }
         public string Filter
         {
@@ -82,38 +94,83 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
             get => ofd.RootDirectory;
             set => ofd.RootDirectory = value;
         }
-        public bool ShowHiddenItems { get => ofd.ShowHiddenItems; set => ofd.ShowHiddenItems = value; }
-        public bool ShowReadOnly { get => ofd.ShowReadOnly; set => ofd.ShowReadOnly = value; }
-        public string Title { get => ofd.Title; set => ofd.Title = value; }
-        public bool ValidateNames { get => ofd.ValidateNames; set => ofd.ValidateNames = value; }
+        public string[] SafeFileNames
+        {
+            get => ofd.SafeFileNames;
+        }
+        public bool ShowHiddenItems 
+        {
+            get => ofd.ShowHiddenItems;
+            set => ofd.ShowHiddenItems = value;
+        }
+        public bool ShowReadOnly
+        {
+            get => ofd.ShowReadOnly;
+            set => ofd.ShowReadOnly = value;
+        }
+        public string Title
+        {
+            get => ofd.Title;
+            set => ofd.Title = value;
+        }
+        public bool ValidateNames
+        {
+            get => ofd.ValidateNames;
+            set => ofd.ValidateNames = value;
+        }
 
-        public MyOfd()
+        public MyOfd(
+            bool addExtension = false,
+            bool addToRecent = false,
+            bool checkFileExists = true,
+            bool checkPathExists = true,
+            Guid? clientGuid = null,
+            string defaultDirectory = "C:\\",
+            string defaultExt = "",
+            bool dereferenceLinks = true,
+            string fileName = "",
+            string filter = "",
+            int filterIndex = 0,
+            bool forcePreviewPane = false,
+            string InitialDirectory = "C:\\",
+            bool multiselect = false,
+            bool readOnlyChecked = false,
+            string rootDirectory = "",
+            bool showHiddenItems = false,
+            bool showReadOnly = false,
+            string title = "",
+            bool validateNames = false,
+            Window? owner = null)
         {
             ofd = new OpenFileDialog
             {
-                AddExtension = false,
-                AddToRecent = false,
-                CheckFileExists = true,
-                CheckPathExists = true,
-                DefaultDirectory = "",
-                DefaultExt = "",
-                DereferenceLinks = true,
-                Filter = "",
-                FilterIndex = 1,
-                ForcePreviewPane = false,
-                InitialDirectory = "",
-                Multiselect = false,
-                ReadOnlyChecked = false,
-                RootDirectory = "",
-                ShowHiddenItems = false,
-                ShowReadOnly = false,
-                Title = "",
-                ValidateNames = false
+                AddExtension = addExtension,
+                AddToRecent = addToRecent,
+                CheckFileExists = checkFileExists,
+                CheckPathExists = checkPathExists,
+                ClientGuid = clientGuid,
+                FileName = fileName,
+                DefaultDirectory = defaultDirectory,
+                DefaultExt = defaultExt,
+                DereferenceLinks = dereferenceLinks,
+                Filter = filter,
+                FilterIndex = filterIndex,
+                ForcePreviewPane = forcePreviewPane,
+                InitialDirectory = InitialDirectory,
+                Multiselect = multiselect,
+                ReadOnlyChecked = readOnlyChecked,
+                RootDirectory = rootDirectory,
+                ShowHiddenItems = showHiddenItems,
+                ShowReadOnly = showReadOnly,
+                Title = title,
+                ValidateNames = validateNames,
             };
+            this.owner = owner;
         }
 
-        public void Dispose()
+        public bool? ShowDialog(Window? owner = null)
         {
+            return ofd.ShowDialog(owner ?? this.owner);
         }
     }
 }

@@ -30,7 +30,10 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
         /// <param name="viewModel">View to close.</param>
         void Close(object viewModel);
 
-
-        void OpenFileDialog();
+        /// <summary>
+        /// Creates a new instance of <see cref="IOpenFileDialog"/>.
+        /// </summary>
+        /// <returns>A new ofd.</returns>
+        IOpenFileDialog NewOfd();
     }
 }

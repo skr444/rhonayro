@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Win32;
 
+using RhonAyro.Client.Desktop.Ui.Navigation;
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
 
@@ -23,6 +24,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private readonly ICompetitionRepository competitionRepository;
         private readonly IViewStateRepository viewStateRepository;
         private readonly ILogoRepository logoRepository;
+        private readonly INavigationService navigation;
         private DateTime? startDate;
         private int? startHour;
         private int? startMinute;
@@ -116,11 +118,12 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
         public ICommand NextSponsorLogoCommand { get; }
 
-        public PreparationViewModel(IFileStorage fileStorage)
+        public PreparationViewModel(IFileStorage fileStorage, INavigationService navigationService)
         {
             competitionRepository = fileStorage.GetRepository<ICompetitionRepository>();
             viewStateRepository = fileStorage.GetRepository<IViewStateRepository>();
             logoRepository = fileStorage.GetRepository<ILogoRepository>();
+            navigation = navigationService;
 
             var competition = competitionRepository.All().FirstOrDefault();
             if (competition == null)
@@ -173,10 +176,15 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
             ImportHostLogoCommand = new RelayCommand(() =>
             {
-                var ofd = new OpenFileDialog
+                var ofd = navigation.NewOfd();
+                if (ofd.ShowDialog() ?? false)
                 {
-
-                };
+                    hostLogo = new Logo
+                    {
+                        CompetitionId = activeCompetition.Id,
+                        Path = ofd.
+                    }
+                }
             });
         }
 
