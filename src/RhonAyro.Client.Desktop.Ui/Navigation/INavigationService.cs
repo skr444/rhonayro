@@ -33,7 +33,7 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
         /// <summary>
         /// Creates a new instance of <see cref="IOpenFileDialog"/>.
         /// </summary>
-        /// <returns>A new ofd.</returns>
+        /// <returns>A new ready to use dialog.</returns>
         IOpenFileDialog NewOfd();
     }
 }

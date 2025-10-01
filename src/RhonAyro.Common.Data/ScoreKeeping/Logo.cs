@@ -8,11 +8,6 @@ namespace RhonAyro.Common.Data.ScoreKeeping
     public sealed class Logo : Entity
     {
         /// <summary>
-        /// Gets or sets the file path on disk.
-        /// </summary>
-        public string? Path { get; set; }
-
-        /// <summary>
         /// Gets or sets the raw image data.
         /// </summary>
         public byte[] ImageData { get; set; }
@@ -32,7 +27,6 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// </summary>
         public Logo()
         {
-            Path = null;
             ImageData = Array.Empty<byte>();
             Type = null;
         }
@@ -40,7 +34,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{base.ToString()}, Path='{Path}', ImageData='{ImageData}', Type='{Type}', CompetitionId='{CompetitionId}'";
+            return $"{base.ToString()}, ImageDataBytes='{ImageData.Length}', Type='{Type}', CompetitionId='{CompetitionId}'";
         }
     }
 }

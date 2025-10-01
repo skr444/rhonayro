@@ -7,6 +7,8 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 using RhonAyro.Client.Desktop.Ui.Navigation;
+using RhonAyro.Client.Desktop.Ui.Services;
+using RhonAyro.Client.Desktop.Ui.Services.Implementation;
 using RhonAyro.Client.Desktop.Ui.ViewModels;
 using RhonAyro.Infrastructure.Runtime.Api;
 using RhonAyro.Infrastructure.Runtime.Implementation;
@@ -40,6 +42,9 @@ namespace RhonAyro.Client.Desktop.Ui
                 .AddSingleton<TabHostViewModel>()
                 .AddSingleton<ILifecycleManager, LifecycleManager>(_ => lifecycleManager)
                 .AddSingleton<IFileStorage, FileStorage>(_ => new FileStorage(storageDirectory, lifecycleManager))
+                .AddSingleton<IFileSystemService, FileSystemService>()
+                .AddSingleton<IResourceService, ResourceService>()
+                .AddSingleton<ILogoService, LogoService>()
 
                 .AddTransient<ClubMemberManagementViewModel>()
                 .AddTransient<PreparationViewModel>()

@@ -8,7 +8,7 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
     internal class MyOfd : IOpenFileDialog
     {
         private readonly OpenFileDialog ofd;
-        private Window? owner;
+        private readonly Window? owner;
 
         public bool AddExtension
         {

@@ -4,8 +4,6 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
-using Microsoft.Win32;
-
 using RhonAyro.Client.Desktop.Ui.ViewModels;
 
 namespace RhonAyro.Client.Desktop.Ui.Navigation

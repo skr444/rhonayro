@@ -33,11 +33,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Resources\placeholder-image.png" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Folder Include="Properties\" />
     </ItemGroup>
 
     <ItemGroup>
         <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\placeholder-image.png" />
     </ItemGroup>
 
     <ItemGroup>

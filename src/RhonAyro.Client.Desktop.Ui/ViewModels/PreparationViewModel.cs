@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Microsoft.Win32;
-
 using RhonAyro.Client.Desktop.Ui.Navigation;
+using RhonAyro.Client.Desktop.Ui.Services;
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
 
@@ -25,11 +22,14 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private readonly IViewStateRepository viewStateRepository;
         private readonly ILogoRepository logoRepository;
         private readonly INavigationService navigation;
+        private readonly IFileSystemService fileSystem;
+        private readonly IResourceService resources;
         private DateTime? startDate;
         private int? startHour;
         private int? startMinute;
         private Competition activeCompetition;
-        private Logo hostLogo;
+        private Logo? hostLogo;
+        private ImageSource? hostLogoSource;
         private IList<Logo> sponsorLogos;
         private int sponsorLogoIndex;
 
@@ -106,7 +106,16 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         // logos
 
         public string HostLogoPath => hostLogo?.Path ?? String.Empty;
-        public byte[] HostLogoImage => hostLogo?.ImageData ?? Array.Empty<byte>();
+        public ImageSource? HostLogoImage
+        {
+            get
+            {
+                if ((hostLogoSource == null) && ())
+                {
+
+                }
+            }
+        }
 
         public ICommand ImportHostLogoCommand { get; }
 
@@ -118,12 +127,15 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
         public ICommand NextSponsorLogoCommand { get; }
 
-        public PreparationViewModel(IFileStorage fileStorage, INavigationService navigationService)
+        public PreparationViewModel(IFileStorage fileStorage, INavigationService navigationService,
+            IFileSystemService fileSystemService, IResourceService resourceService)
         {
             competitionRepository = fileStorage.GetRepository<ICompetitionRepository>();
             viewStateRepository = fileStorage.GetRepository<IViewStateRepository>();
             logoRepository = fileStorage.GetRepository<ILogoRepository>();
             navigation = navigationService;
+            fileSystem = fileSystemService;
+            resources = resourceService;
 
             var competition = competitionRepository.All().FirstOrDefault();
             if (competition == null)
@@ -179,10 +191,20 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 var ofd = navigation.NewOfd();
                 if (ofd.ShowDialog() ?? false)
                 {
-                    hostLogo = new Logo
+                    if (logoRepository.TryGet("HostLogo", ofd.FileName, activeCompetition.Id, out Logo? logo))
                     {
-                        CompetitionId = activeCompetition.Id,
-                        Path = ofd.
+                        hostLogo = logo;
+                    }
+                    else
+                    {
+                        hostLogo = new Logo
+                        {
+                            CompetitionId = activeCompetition.Id,
+                            Path = ofd.FileName,
+                            Type = "HostLogo",
+                            ImageData = fileSystemService.ReadFileBytes(ofd.FileName)
+                        };
+                        logoRepository.AddOrUpdate(hostLogo);
                     }
                 }
             });

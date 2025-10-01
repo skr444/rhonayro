@@ -23,11 +23,10 @@ namespace RhonAyro.Infrastructure.Storage.File
         }
 
         /// <inheritdoc />
-        public bool TryGet(string type, string path, Guid competitionId, out Logo? logo)
+        public bool TryGet(string type, Guid competitionId, out Logo? logo)
         {
             logo = All().FirstOrDefault(x =>
                    (x.Type == type)
-                && (x.Path == path)
                 && (x.CompetitionId == competitionId));
 
             return logo != null;
