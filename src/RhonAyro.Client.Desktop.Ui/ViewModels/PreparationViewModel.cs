@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -11,16 +12,19 @@ using RhonAyro.Client.Desktop.Ui.Navigation;
 using RhonAyro.Client.Desktop.Ui.Services;
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
+using System.Windows.Media.Imaging;
 
 namespace RhonAyro.Client.Desktop.Ui.ViewModels
 {
     internal sealed class PreparationViewModel : ObservableObject
     {
         private const string ActiveCompetitionIdKey = "activeCompetitionId";
+        private const string HostLogoKey = "HostLogo";
 
         private readonly ICompetitionRepository competitionRepository;
         private readonly IViewStateRepository viewStateRepository;
         private readonly ILogoRepository logoRepository;
+        private readonly ILogoService logoService;
         private readonly INavigationService navigation;
         private readonly IFileSystemService fileSystem;
         private readonly IResourceService resources;
@@ -105,17 +109,8 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
         // logos
 
-        public string HostLogoPath => hostLogo?.Path ?? String.Empty;
-        public ImageSource? HostLogoImage
-        {
-            get
-            {
-                if ((hostLogoSource == null) && ())
-                {
-
-                }
-            }
-        }
+        public string HostLogoPath => hostLogo?.Name ?? String.Empty;
+        public ImageSource HostLogoImage => logoService.ToImage(hostLogo?.ImageData);
 
         public ICommand ImportHostLogoCommand { get; }
 
@@ -128,11 +123,12 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         public ICommand NextSponsorLogoCommand { get; }
 
         public PreparationViewModel(IFileStorage fileStorage, INavigationService navigationService,
-            IFileSystemService fileSystemService, IResourceService resourceService)
+            IFileSystemService fileSystemService, IResourceService resourceService, ILogoService logoService)
         {
             competitionRepository = fileStorage.GetRepository<ICompetitionRepository>();
             viewStateRepository = fileStorage.GetRepository<IViewStateRepository>();
             logoRepository = fileStorage.GetRepository<ILogoRepository>();
+            this.logoService = logoService;
             navigation = navigationService;
             fileSystem = fileSystemService;
             resources = resourceService;
@@ -147,6 +143,8 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             startDate = activeCompetition.EventStart;
             startHour = activeCompetition.EventStart.Hour;
             startMinute = (int)Quantize(activeCompetition.EventStart.Minute);
+
+            hostLogo = this.logoService.FirstOrDefault();
 
             NewEventCommand = new RelayCommand(() =>
             {
@@ -191,7 +189,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 var ofd = navigation.NewOfd();
                 if (ofd.ShowDialog() ?? false)
                 {
-                    if (logoRepository.TryGet("HostLogo", ofd.FileName, activeCompetition.Id, out Logo? logo))
+                    if (logoRepository.TryGet(HostLogoKey, Path.GetFileName(ofd.FileName), activeCompetition.Id, out Logo? logo))
                     {
                         hostLogo = logo;
                     }
@@ -200,12 +198,14 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                         hostLogo = new Logo
                         {
                             CompetitionId = activeCompetition.Id,
-                            Path = ofd.FileName,
-                            Type = "HostLogo",
+                            Name = Path.GetFileName(ofd.FileName),
+                            Type = HostLogoKey,
                             ImageData = fileSystemService.ReadFileBytes(ofd.FileName)
                         };
                         logoRepository.AddOrUpdate(hostLogo);
                     }
+                    OnPropertyChanged(nameof(HostLogoImage));
+                    OnPropertyChanged(nameof(HostLogoPath));
                 }
             });
         }

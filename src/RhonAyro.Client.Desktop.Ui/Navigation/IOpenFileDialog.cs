@@ -5,6 +5,9 @@ using Microsoft.Win32;
 
 namespace RhonAyro.Client.Desktop.Ui.Navigation
 {
+    /// <summary>
+    /// Mirrors the <see cref="OpenFileDialog"/> API surface.
+    /// </summary>
     internal interface IOpenFileDialog
     {
         /// <inheritdoc cref="FileDialog.AddExtension"/>

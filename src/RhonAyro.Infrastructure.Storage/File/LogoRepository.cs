@@ -21,15 +21,5 @@ namespace RhonAyro.Infrastructure.Storage.File
             : base(storageFilePath, lifecycleManager)
         {
         }
-
-        /// <inheritdoc />
-        public bool TryGet(string type, Guid competitionId, out Logo? logo)
-        {
-            logo = All().FirstOrDefault(x =>
-                   (x.Type == type)
-                && (x.CompetitionId == competitionId));
-
-            return logo != null;
-        }
     }
 }

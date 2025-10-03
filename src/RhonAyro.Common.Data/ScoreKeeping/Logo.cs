@@ -8,6 +8,11 @@ namespace RhonAyro.Common.Data.ScoreKeeping
     public sealed class Logo : Entity
     {
         /// <summary>
+        /// Gets or sets the name of this logo.
+        /// </summary>
+        public required string Name { get; set; }
+
+        /// <summary>
         /// Gets or sets the raw image data.
         /// </summary>
         public byte[] ImageData { get; set; }
@@ -15,7 +20,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <summary>
         /// Gets or sets the type label of this logo.
         /// </summary>
-        public string? Type { get; set; }
+        public required string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the reference to the <see cref="Competition"/> instance.
@@ -28,13 +33,12 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         public Logo()
         {
             ImageData = Array.Empty<byte>();
-            Type = null;
         }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{base.ToString()}, ImageDataBytes='{ImageData.Length}', Type='{Type}', CompetitionId='{CompetitionId}'";
+            return $"{base.ToString()}, Name='{Name}', ImageDataBytes='{ImageData.Length}', Type='{Type}', CompetitionId='{CompetitionId}'";
         }
     }
 }
