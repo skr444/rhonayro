@@ -125,7 +125,24 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    
+
+                    <!-- Discipline sessions -->
+                    <DataGridTextColumn
+                        Binding="{Binding DisciplineSessions, Mode=OneWay}"
+                        IsReadOnly="True">
+                        <DataGridTextColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="Sessions"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Margin" Value="5 0 5 0"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
                     <!-- Id -->
                     <DataGridTextColumn
                         Binding="{Binding Id, Mode=OneWay}"

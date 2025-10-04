@@ -45,6 +45,7 @@ namespace RhonAyro.Client.Desktop.Ui
                 .AddSingleton<IFileSystemService, FileSystemService>()
                 .AddSingleton<IResourceService, ResourceService>()
                 .AddSingleton<ILogoService, LogoService>()
+                .AddSingleton<ICompetitionService, CompetitionService>()
 
                 .AddTransient<ClubMemberManagementViewModel>()
                 .AddTransient<PreparationViewModel>()

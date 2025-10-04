@@ -23,7 +23,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         {
             Logo? logo = logoRepository.All().FirstOrDefault(predicate ?? (_ => true));
 
-            if (logo == null)
+            if (useFallbackLogo && (logo == null))
             {
                 return GetPlaceholderLogo();
             }

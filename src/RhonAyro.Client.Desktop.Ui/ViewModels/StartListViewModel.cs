@@ -3,6 +3,7 @@ using System.Linq;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using RhonAyro.Client.Desktop.Ui.Services;
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
 using RhonAyro.Infrastructure.Storage.File;
@@ -11,6 +12,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 {
     internal sealed class StartListViewModel : ObservableObject
     {
+        private readonly ICompetitionService competitionService;
         private readonly IClubMemberRepository clubMemberRepository;
         private readonly IStartListEntryRepository startListEntryRepository;
         private readonly IWheelRepository wheelRepository;
@@ -54,11 +56,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        public StartListViewModel(IFileStorage fileStorage)
+        public StartListViewModel(IFileStorage fileStorage, ICompetitionService competitionService)
         {
             clubMemberRepository = fileStorage.GetRepository<IClubMemberRepository>();
             startListEntryRepository = fileStorage.GetRepository<IStartListEntryRepository>();
-            wheelRepository = fileStorage.GetRepository<WheelRepository>();
+            wheelRepository = fileStorage.GetRepository<IWheelRepository>();
             
             var startListEntry = startListEntryRepository.All().FirstOrDefault();
             if (startListEntry == null)

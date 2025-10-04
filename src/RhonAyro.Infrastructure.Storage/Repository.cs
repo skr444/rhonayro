@@ -13,6 +13,8 @@ namespace RhonAyro.Infrastructure.Storage
     {
         protected IDictionary<Guid, TData> store;
 
+        public int Count => store.Count;
+
         protected Repository()
         {
             store = new Dictionary<Guid, TData>();

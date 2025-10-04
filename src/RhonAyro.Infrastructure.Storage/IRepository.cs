@@ -12,6 +12,11 @@ namespace RhonAyro.Infrastructure.Storage
     public interface IRepository<TData> where TData : Entity
     {
         /// <summary>
+        /// Gets the number of elements in this repository.
+        /// </summary>
+        int Count { get; }
+
+        /// <summary>
         /// Attempts to retrieve a single instance of <typeparamref name="TData"/>.
         /// </summary>
         /// <param name="id">Identifier of the requested instance.</param>

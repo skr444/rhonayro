@@ -40,6 +40,7 @@ class DisciplineSession {
     + Discipline : Discipline
     + Juror : ClubMember
     + ScoreBoard : ScoreBoard
+    + StartList : StartListEntry[]
 }
 
 class ScoreEntry {
@@ -80,8 +81,9 @@ StartListEntry "1" *.. "1" Wheel : Wheel
 DisciplineSession "1" *.. "1" Discipline : Discipline
 DisciplineSession "1" *.. "1" ClubMember : Juror
 DisciplineSession "1" *.. "1" ScoreBoard : ScoreBoard
+DisciplineSession "1" o.left. "*" StartListEntry : StartList
 PerformanceEntry "1" *.. "1" StartListEntry : Athlete
-PerformanceEntry "1" o.right. "0..*" ScoreEntry : ScoreValues
+PerformanceEntry "1" o.. "0..*" ScoreEntry : ScoreValues
 ScoreBoard "1" o.. "0..*" PerformanceEntry : HighScore
 
 @enduml

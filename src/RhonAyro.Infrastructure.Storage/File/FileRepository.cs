@@ -62,7 +62,7 @@ namespace RhonAyro.Infrastructure.Storage.File
         {
             Task.Run(async () =>
             {
-                using (Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
+                using (Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write,
                     bufferSize: 8192, useAsync: true))
                 {
                     if (lifecycleManager.Token.IsCancellationRequested)
@@ -82,7 +82,7 @@ namespace RhonAyro.Infrastructure.Storage.File
             {
                 Task.Run(async () =>
                 {
-                    using (Stream stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None,
+                    using (Stream stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read,
                         bufferSize: 8192, useAsync: true))
                     {
                         if (lifecycleManager.Token.IsCancellationRequested)

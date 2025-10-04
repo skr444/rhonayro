@@ -58,6 +58,8 @@ namespace RhonAyro.Infrastructure.Storage.File
             ArgumentException.ThrowIfNullOrEmpty(key, nameof(key));
 
             store[$"{typeof(TViewModel).Name}.{key}"] = value;
+
+            Save();
         }
 
         /// <inheritdoc />
@@ -66,17 +68,23 @@ namespace RhonAyro.Infrastructure.Storage.File
             ArgumentException.ThrowIfNullOrEmpty(key, nameof(key));
 
             store[key] = value;
+
+            Save();
         }
 
         /// <inheritdoc />
         public bool TryGet<TViewModel>(string key, out string? value)
         {
+            Load();
+
             return store.TryGetValue($"{typeof(TViewModel).Name}.{key}", out value);
         }
 
         /// <inheritdoc />
         public bool TryGet(string key, out string? value)
         {
+            Load();
+
             return store.TryGetValue(key, out value);
         }
 
@@ -96,7 +104,7 @@ namespace RhonAyro.Infrastructure.Storage.File
             {
                 Task.Run(async () =>
                 {
-                    using (Stream stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None,
+                    using (Stream stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read,
                         bufferSize: 8192, useAsync: true))
                     {
                         if (lifecycleManager.Token.IsCancellationRequested)
@@ -121,7 +129,7 @@ namespace RhonAyro.Infrastructure.Storage.File
         {
             Task.Run(async () =>
             {
-                using (Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
+                using (Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write,
                     bufferSize: 8192, useAsync: true))
                 {
                     if (lifecycleManager.Token.IsCancellationRequested)
