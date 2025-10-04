@@ -16,6 +16,11 @@
         public string? LastName { get; set; }
 
         /// <summary>
+        /// Gets the full name of this member.
+        /// </summary>
+        public string? FullName => $"{FirstName} {LastName}";
+
+        /// <summary>
         /// Gets or sets the roles this person have.
         /// </summary>
         public RoleType Roles { get; set; }

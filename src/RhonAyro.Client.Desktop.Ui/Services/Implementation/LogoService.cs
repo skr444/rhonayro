@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Windows.Media.Imaging;
 
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
@@ -21,18 +19,34 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         }
 
         /// <inheritdoc />
-        public Logo FirstOrDefault(Func<Logo, bool>? predicate = null)
+        public Logo? FirstOrDefault(Func<Logo, bool>? predicate = null, bool useFallbackLogo = false)
         {
-            return logoRepository.All().FirstOrDefault(predicate ?? (_ => true), GetPlaceholderLogo());
+            Logo? logo = logoRepository.All().FirstOrDefault(predicate ?? (_ => true));
+
+            if (logo == null)
+            {
+                return GetPlaceholderLogo();
+            }
+
+            return logo;
         }
 
         /// <inheritdoc />
-        public Logo GetLogo(string type, string name, Guid competitionId)
+        public Logo? GetLogo(string type, string name, Guid competitionId, bool useFallbackLogo = false)
         {
             return FirstOrDefault(x =>
                    (x.Type == type)
                 && (x.Name == name)
-                && (x.CompetitionId == competitionId));
+                && (x.CompetitionId == competitionId),
+                useFallbackLogo);
+        }
+
+        public Logo? GetLogo(string type, Guid competitionId, bool useFallbackLogo = false)
+        {
+            return FirstOrDefault(x =>
+                   (x.Type == type)
+                && (x.CompetitionId == competitionId),
+                useFallbackLogo);
         }
 
         /// <inheritdoc />
@@ -46,28 +60,14 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             return resources.GetPlaceHolderImage();
         }
 
-        /// <inheritdoc />
-        public BitmapImage ToImage(byte[]? data)
+        public byte[] ToLogoBytes(byte[]? data)
         {
-            byte[] candidateData;
             if ((data?.Length ?? 0) == 0)
             {
-                candidateData = resources.GetPlaceHolderImage();
-            }
-            else
-            {
-                candidateData = data!;
+                return resources.GetPlaceHolderImage();
             }
 
-            using var stream = new MemoryStream(candidateData);
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            // bmp.DecodePixelWidth = 512; // optional
-            image.StreamSource = stream;
-            image.EndInit();
-            image.Freeze();
-            return image;
+            return data!;
         }
 
         private Logo GetPlaceholderLogo()

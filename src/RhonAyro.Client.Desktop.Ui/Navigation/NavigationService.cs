@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -79,6 +80,146 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
         public IOpenFileDialog NewOfd()
         {
             return new MyOfd();
+        }
+
+        public MessageBoxResult ShowMessageBox(string message, string? caption = null, MessageBoxButton messageBoxButton = MessageBoxButton.OK, MessageBoxImage messageBoxImage = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.Cancel, object? owner = null, MessageBoxOptions messageBoxOptions = MessageBoxOptions.None)
+        {
+            System.Windows.MessageBoxResult dialogResult = System.Windows.MessageBoxResult.None;
+            if (owner is Window window)
+            {
+                dialogResult = MessageBox.Show(window, message, caption, ConvertMessageBoxButton(messageBoxButton), ConvertMessageBoxImage(messageBoxImage), ConvertMessageBoxResult(defaultResult), ConvertMessageBoxOptions(messageBoxOptions));
+            }
+            else
+            {
+                dialogResult = MessageBox.Show(message, caption, ConvertMessageBoxButton(messageBoxButton), ConvertMessageBoxImage(messageBoxImage), ConvertMessageBoxResult(defaultResult), ConvertMessageBoxOptions(messageBoxOptions));
+            }
+            return ConvertMessageBoxResult(dialogResult);
+        }
+
+        private static System.Windows.MessageBoxButton ConvertMessageBoxButton(MessageBoxButton button)
+        {
+            switch (button)
+            {
+                case MessageBoxButton.OK:
+                    return System.Windows.MessageBoxButton.OK;
+
+                case MessageBoxButton.OKCancel:
+                    return System.Windows.MessageBoxButton.OKCancel;
+
+                case MessageBoxButton.YesNo:
+                    return System.Windows.MessageBoxButton.YesNo;
+
+                case MessageBoxButton.YesNoCancel:
+                    return System.Windows.MessageBoxButton.YesNoCancel;
+
+                default:
+                    throw new ArgumentException($"Unsupported {nameof(MessageBoxButton)} value '{button}({(int)button})'");
+            }
+        }
+
+        private static System.Windows.MessageBoxImage ConvertMessageBoxImage(MessageBoxImage image)
+        {
+            switch (image)
+            {
+                case MessageBoxImage.None:
+                    return System.Windows.MessageBoxImage.None;
+
+                case MessageBoxImage.Asterisk:
+                    return System.Windows.MessageBoxImage.Asterisk;
+
+                case MessageBoxImage.Error:
+                    return System.Windows.MessageBoxImage.Error;
+
+                case MessageBoxImage.Exclamation:
+                    return System.Windows.MessageBoxImage.Exclamation;
+
+                case MessageBoxImage.Hand:
+                    return System.Windows.MessageBoxImage.Hand;
+
+                case MessageBoxImage.Information:
+                    return System.Windows.MessageBoxImage.Information;
+
+                case MessageBoxImage.Stop:
+                    return System.Windows.MessageBoxImage.Stop;
+
+                case MessageBoxImage.Warning:
+                    return System.Windows.MessageBoxImage.Warning;
+
+                default:
+                    throw new ArgumentException($"Unsupported {nameof(MessageBoxImage)} value '{image}({(int)image})'");
+            }
+        }
+
+        private static System.Windows.MessageBoxResult ConvertMessageBoxResult(MessageBoxResult result)
+        {
+            switch (result)
+            {
+                case MessageBoxResult.None:
+                    return System.Windows.MessageBoxResult.None;
+
+                case MessageBoxResult.OK:
+                    return System.Windows.MessageBoxResult.OK;
+
+                case MessageBoxResult.Cancel:
+                    return System.Windows.MessageBoxResult.Cancel;
+
+                case MessageBoxResult.Yes:
+                    return System.Windows.MessageBoxResult.Yes;
+
+                case MessageBoxResult.No:
+                    return System.Windows.MessageBoxResult.No;
+
+                default:
+                    throw new ArgumentException($"Unsupported {nameof(MessageBoxResult)} value '{result}({(int)result})'");
+            }
+        }
+
+        private static MessageBoxResult ConvertMessageBoxResult(System.Windows.MessageBoxResult result)
+        {
+            switch (result)
+            {
+                case System.Windows.MessageBoxResult.None:
+                    return MessageBoxResult.None;
+
+                case System.Windows.MessageBoxResult.OK:
+                    return MessageBoxResult.OK;
+
+                case System.Windows.MessageBoxResult.Cancel:
+                    return MessageBoxResult.Cancel;
+
+                case System.Windows.MessageBoxResult.Yes:
+                    return MessageBoxResult.Yes;
+
+                case System.Windows.MessageBoxResult.No:
+                    return MessageBoxResult.No;
+
+                default:
+                    throw new ArgumentException($"Unsupported {nameof(System.Windows.MessageBoxResult)} value '{result}({(int)result})'");
+            }
+        }
+
+        private static System.Windows.MessageBoxOptions ConvertMessageBoxOptions(MessageBoxOptions options)
+        {
+            switch (options)
+            {
+                case MessageBoxOptions.None:
+                    return System.Windows.MessageBoxOptions.None;
+
+                case MessageBoxOptions.DefaultDesktopOnly:
+                    return System.Windows.MessageBoxOptions.DefaultDesktopOnly;
+
+                case MessageBoxOptions.RightAlign:
+                    return System.Windows.MessageBoxOptions.RightAlign;
+
+                case MessageBoxOptions.RtlReading:
+                    return System.Windows.MessageBoxOptions.RtlReading;
+
+                case MessageBoxOptions.ServiceNotification:
+                    return System.Windows.MessageBoxOptions.ServiceNotification;
+
+                default:
+                    throw new ArgumentException($"Unsupported {nameof(MessageBoxOptions)} value '{options}({(int)options})'");
+            }
         }
     }
 }

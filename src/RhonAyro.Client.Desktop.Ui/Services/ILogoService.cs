@@ -10,7 +10,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services
     /// </summary>
     internal interface ILogoService
     {
-        Logo FirstOrDefault(Func<Logo, bool>? predicate = null);
+        Logo? FirstOrDefault(Func<Logo, bool>? predicate = null, bool useFallbackLogo = false);
 
         /// <summary>
         /// Attempts to retrieve an instance of <see cref="Logo"/>.
@@ -18,11 +18,14 @@ namespace RhonAyro.Client.Desktop.Ui.Services
         /// <param name="type">Type label.</param>
         /// <param name="name">File name.</param>
         /// <param name="competitionId">Id of the associated competition.</param>
-        /// <returns>The specified logo entry or a dummy entry with the placeholder image.</returns>
-        Logo GetLogo(string type, string name, Guid competitionId);
+        /// <param name="useFallbackLogo">Whether to fall back to the placeholder image.</param>
+        /// <returns>The specified logo entry or <see langword="null"/>.</returns>
+        Logo? GetLogo(string type, string name, Guid competitionId, bool useFallbackLogo = false);
+
+        Logo? GetLogo(string type, Guid competitionId, bool useFallbackLogo = false);
 
         byte[] GetLogoData(Guid id);
 
-        BitmapImage ToImage(byte[]? data);
+        byte[] ToLogoBytes(byte[]? data);
     }
 }

@@ -182,7 +182,7 @@
                        FontWeight="DemiBold"/>
             </Grid>
             <Image Grid.Row="2" Grid.RowSpan="2"
-                   Source="{Binding HostLogoImage, Converter={StaticResource BytesToImage}}"
+                   Source="{Binding HostLogoImage, Converter={StaticResource BytesToImage}, Mode=OneWay}"
                    Stretch="Uniform"
                    SnapsToDevicePixels="True"
                    UseLayoutRounding="True"/>

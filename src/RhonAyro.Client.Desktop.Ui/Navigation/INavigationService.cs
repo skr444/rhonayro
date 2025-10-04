@@ -35,5 +35,7 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
         /// </summary>
         /// <returns>A new ready to use dialog.</returns>
         IOpenFileDialog NewOfd();
+
+        MessageBoxResult ShowMessageBox(string message, string? caption = null, MessageBoxButton messageBoxButton = MessageBoxButton.OK, MessageBoxImage messageBoxImage = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.Cancel, object? owner = null, MessageBoxOptions messageBoxOptions = MessageBoxOptions.None);
     }
 }

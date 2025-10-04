@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Windows.Input;
-using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,7 +11,6 @@ using RhonAyro.Client.Desktop.Ui.Navigation;
 using RhonAyro.Client.Desktop.Ui.Services;
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
-using System.Windows.Media.Imaging;
 
 namespace RhonAyro.Client.Desktop.Ui.ViewModels
 {
@@ -33,7 +31,6 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private int? startMinute;
         private Competition activeCompetition;
         private Logo? hostLogo;
-        private ImageSource? hostLogoSource;
         private IList<Logo> sponsorLogos;
         private int sponsorLogoIndex;
 
@@ -57,6 +54,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                     OnPropertyChanged(nameof(StartDate));
                     OnPropertyChanged(nameof(StartHour));
                     OnPropertyChanged(nameof(StartMinute));
+                    hostLogo = logoService.GetLogo(HostLogoKey, activeCompetition.Id, true);
+                    OnPropertyChanged(nameof(HostLogoImage));
+                    OnPropertyChanged(nameof(HostLogoPath));
                     viewStateRepository.Save<PreparationViewModel>(ActiveCompetitionIdKey, activeCompetition.Id.ToString());
                 }
             }
@@ -110,7 +110,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         // logos
 
         public string HostLogoPath => hostLogo?.Name ?? String.Empty;
-        public ImageSource HostLogoImage => logoService.ToImage(hostLogo?.ImageData);
+        public byte[] HostLogoImage => logoService.ToLogoBytes(hostLogo?.ImageData);
 
         public ICommand ImportHostLogoCommand { get; }
 
@@ -145,6 +145,8 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             startMinute = (int)Quantize(activeCompetition.EventStart.Minute);
 
             hostLogo = this.logoService.FirstOrDefault();
+            OnPropertyChanged(nameof(HostLogoImage));
+            OnPropertyChanged(nameof(HostLogoPath));
 
             NewEventCommand = new RelayCommand(() =>
             {
@@ -189,11 +191,8 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 var ofd = navigation.NewOfd();
                 if (ofd.ShowDialog() ?? false)
                 {
-                    if (logoRepository.TryGet(HostLogoKey, Path.GetFileName(ofd.FileName), activeCompetition.Id, out Logo? logo))
-                    {
-                        hostLogo = logo;
-                    }
-                    else
+                    hostLogo = logoService.GetLogo(HostLogoKey, Path.GetFileName(ofd.FileName), activeCompetition.Id);
+                    if (hostLogo == null)
                     {
                         hostLogo = new Logo
                         {

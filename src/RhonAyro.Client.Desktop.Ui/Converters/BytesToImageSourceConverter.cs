@@ -18,16 +18,16 @@ namespace RhonAyro.Client.Desktop.Ui.Converters
 
             try
             {
-                using var ms = new MemoryStream(bytes);
-                var bmp = new BitmapImage();
-                bmp.BeginInit();
-                bmp.CacheOption = BitmapCacheOption.OnLoad; // load into memory so stream can be disposed
-                                                            // Optional downscale if needed (e.g., to limit memory/CPU):
-                                                            // bmp.DecodePixelWidth = 512; // or DecodePixelHeight
-                bmp.StreamSource = ms;
-                bmp.EndInit();
-                bmp.Freeze(); // make cross-thread safe
-                return bmp;
+                using var stream = new MemoryStream(bytes);
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                //image.DecodePixelHeight = 512; // optional for performance boost
+                //image.DecodePixelWidth = 512;
+                image.StreamSource = stream;
+                image.EndInit();
+                image.Freeze(); // make cross-thread safe
+                return image;
             }
             catch
             {

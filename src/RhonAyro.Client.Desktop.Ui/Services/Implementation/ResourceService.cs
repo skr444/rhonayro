@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
@@ -6,26 +7,25 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
     /// <inheritdoc/>
     internal sealed class ResourceService : IResourceService
     {
-        private static readonly string ResourceNamespace = $"{nameof(RhonAyro.Client.Desktop.Ui)}.Resources";
-        private static readonly string PlaceHolderImageResource = $"{ResourceNamespace}.placeholder-image.png";
-
-        private static readonly Assembly assembly = Assembly.GetExecutingAssembly();
+        private static readonly Assembly Assembly = typeof(ResourceService).Assembly;
+        private static readonly string Root = Assembly.GetName().Name!; // "RhonAyro.Client.Desktop.Ui"
+        private const string FileName = "placeholder-image.png";
+        private static readonly string PlaceHolderImageResource = $"{Root}.Resources.{FileName}";
 
         /// <inheritdoc/>
         public byte[] GetPlaceHolderImage()
         {
-            using (var stream = assembly?.GetManifestResourceStream(PlaceHolderImageResource))
+            using var stream = Assembly.GetManifestResourceStream(PlaceHolderImageResource)
+                ?? throw new InvalidOperationException(
+                    $"Embedded resource '' not found. Available: {string.Join(", ", Assembly.GetManifestResourceNames())}");
+            if (stream is null)
             {
-                if (stream is null)
-                {
-                    return Array.Empty<byte>();
-                }
-
-                var buffer = new byte[stream.Length];
-                stream.Read(buffer, 0, buffer.Length);
-
-                return buffer;
+                return Array.Empty<byte>();
             }
+
+            using var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+            return memoryStream.ToArray();
         }
     }
 }
