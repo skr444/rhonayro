@@ -21,6 +21,16 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         public ICollection<Guid> DisciplineSessions { get; set; }
 
         /// <summary>
+        /// Gets or sets the reference to the head juror.
+        /// </summary>
+        public Guid HeadJuror { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference to the competition manager.
+        /// </summary>
+        public Guid CompetitionManager { get; set; }
+
+        /// <summary>
         /// Creates a new instance of <see cref="Competition"/>.
         /// </summary>
         public Competition()
@@ -32,7 +42,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{base.ToString()}, EventStart='{EventStart}', DisciplineSessions='{DisciplineSessions.ToCustomString()}'";
+            return $"{base.ToString()}, EventStart='{EventStart}', DisciplineSessions='{DisciplineSessions.ToCustomString()}', HeadJuror='{HeadJuror}', CompetitionManager='{CompetitionManager}'";
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -33,11 +34,12 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 if ((value != null) && SetProperty(ref selectedAthlete, value))
                 {
-                    activeStartListEntry.AthleteId = selectedAthlete.Id;
-
+                    OnPropertyChanged(nameof(SelectedAthleteName));
                 }
             }
         }
+
+        public string SelectedAthleteName => selectedAthlete?.FullName ?? String.Empty;
 
         public ICollection<ClubMember> Coaches
         {
@@ -51,10 +53,12 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 if ((value != null) && SetProperty(ref selectedCoach, value))
                 {
-                    activeStartListEntry.CoachId = selectedCoach.Id;
+                    OnPropertyChanged(nameof(SelectedCoachName));
                 }
             }
         }
+
+        public string SelectedCoachName => selectedCoach?.FullName ?? String.Empty;
 
         public StartListViewModel(IFileStorage fileStorage, ICompetitionService competitionService)
         {

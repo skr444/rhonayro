@@ -22,6 +22,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private readonly ICompetitionService competitionService;
         private readonly IViewStateRepository viewStateRepository;
         private readonly ILogoRepository logoRepository;
+        private readonly IClubMemberRepository clubMemberRepository;
         private readonly ILogoService logoService;
         private readonly INavigationService navigation;
         private readonly IFileSystemService fileSystem;
@@ -30,6 +31,8 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private int? startHour;
         private int? startMinute;
         private Competition selectedCompetition;
+        private Guid? selectedHeadJurorId;
+        private Guid? selectedManagerId;
         private Logo? hostLogo;
         private IList<Logo> sponsorLogos;
         private int sponsorLogoIndex;
@@ -50,7 +53,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                     startDate = selectedCompetition.EventStart;
                     startHour = selectedCompetition.EventStart.Hour;
                     startMinute = (int)Quantize(selectedCompetition.EventStart.Minute);
+                    selectedHeadJurorId = competitionService.ActiveHeadJuror?.Id;
+                    selectedManagerId = competitionService.ActiveManager?.Id;
                     OnPropertyChanged(nameof(ActiveCompetitionId));
+                    OnPropertyChanged(nameof(SelectedHeadJurorId));
+                    OnPropertyChanged(nameof(SelectedManagerId));
                     OnPropertyChanged(nameof(EventStart));
                     OnPropertyChanged(nameof(StartDate));
                     OnPropertyChanged(nameof(StartHour));
@@ -62,7 +69,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        public Guid ActiveCompetitionId => competitionService.ActiveCompetition.Id;
+        public Guid ActiveCompetitionId => competitionService.ActiveCompetitionId;
         public string EventStart => competitionService.ActiveCompetition.EventStart.ToString();
 
         public DateTime StartDate
@@ -104,6 +111,34 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         public IReadOnlyList<int> Hours { get; } = [.. Enumerable.Range(0, 24)];
         public IReadOnlyList<int> Minutes { get; } = [.. Enumerable.Range(0, 60).Where(m => m % 5 == 0)]; // step 5
 
+        public ICollection<ClubMember> Jurors => clubMemberRepository.All().Where(x => x.Roles.HasFlag(RoleType.Juror)).ToList();
+
+        public Guid? SelectedHeadJurorId
+        {
+            get => competitionService.ActiveHeadJuror?.Id;
+            set
+            {
+                if ((value != null) && SetProperty(ref selectedHeadJurorId, value))
+                {
+                    competitionService.SetHeadJuror(selectedHeadJurorId.Value);
+                }
+            }
+        }
+
+        public ICollection<ClubMember> Members => clubMemberRepository.All();
+
+        public Guid? SelectedManagerId
+        {
+            get => competitionService.ActiveManager?.Id;
+            set
+            {
+                if ((value != null) && SetProperty(ref selectedManagerId, value))
+                {
+                    competitionService.SetManager(selectedManagerId.Value);
+                }
+            }
+        }
+
         public ICommand NewEventCommand { get; }
         public ICommand DeleteCompetitionCommand { get; }
 
@@ -130,17 +165,22 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             this.competitionService = competitionService;
             viewStateRepository = fileStorage.GetRepository<IViewStateRepository>();
             logoRepository = fileStorage.GetRepository<ILogoRepository>();
+            clubMemberRepository = fileStorage.GetRepository<IClubMemberRepository>();
             this.logoService = logoService;
             navigation = navigationService;
             fileSystem = fileSystemService;
             resources = resourceService;
 
             selectedCompetition = competitionService.ActiveCompetition;
+            selectedHeadJurorId = competitionService.ActiveHeadJuror?.Id;
+            selectedManagerId = competitionService.ActiveManager?.Id;
             startDate = selectedCompetition.EventStart;
             startHour = selectedCompetition.EventStart.Hour;
             startMinute = (int)Quantize(selectedCompetition.EventStart.Minute);
             OnPropertyChanged(nameof(SelectedCompetition));
             OnPropertyChanged(nameof(ActiveCompetitionId));
+            OnPropertyChanged(nameof(SelectedHeadJurorId));
+            OnPropertyChanged(nameof(SelectedManagerId));
             OnPropertyChanged(nameof(EventStart));
             OnPropertyChanged(nameof(StartDate));
             OnPropertyChanged(nameof(StartHour));
@@ -154,11 +194,15 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 competitionService.NewActiveCompetition();
                 selectedCompetition = competitionService.ActiveCompetition;
+                selectedHeadJurorId = competitionService.ActiveHeadJuror?.Id;
+                selectedManagerId = competitionService.ActiveManager?.Id;
                 startDate = selectedCompetition.EventStart;
                 startHour = selectedCompetition.EventStart.Hour;
                 startMinute = (int)Quantize(selectedCompetition.EventStart.Minute);
                 OnPropertyChanged(nameof(SelectedCompetition));
                 OnPropertyChanged(nameof(ActiveCompetitionId));
+                OnPropertyChanged(nameof(SelectedHeadJurorId));
+                OnPropertyChanged(nameof(SelectedManagerId));
                 OnPropertyChanged(nameof(EventStart));
                 OnPropertyChanged(nameof(StartDate));
                 OnPropertyChanged(nameof(StartHour));
@@ -173,11 +217,15 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 competitionService.RemoveActiveCompetition();
                 selectedCompetition = competitionService.ActiveCompetition;
+                selectedHeadJurorId = competitionService.ActiveHeadJuror?.Id;
+                selectedManagerId = competitionService.ActiveManager?.Id;
                 startDate = selectedCompetition.EventStart;
                 startHour = selectedCompetition.EventStart.Hour;
                 startMinute = (int)Quantize(selectedCompetition.EventStart.Minute);
                 OnPropertyChanged(nameof(SelectedCompetition));
                 OnPropertyChanged(nameof(ActiveCompetitionId));
+                OnPropertyChanged(nameof(SelectedHeadJurorId));
+                OnPropertyChanged(nameof(SelectedManagerId));
                 OnPropertyChanged(nameof(EventStart));
                 OnPropertyChanged(nameof(StartDate));
                 OnPropertyChanged(nameof(StartHour));

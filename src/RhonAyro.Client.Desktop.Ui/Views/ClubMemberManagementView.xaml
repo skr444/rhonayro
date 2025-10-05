@@ -62,6 +62,8 @@
                                           IsChecked="{Binding IsCoach, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox Content="Juror"
                                           IsChecked="{Binding IsJuror, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Content="Head Juror"
+                                          IsChecked="{Binding IsHeadJuror, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
