@@ -8,7 +8,9 @@ abstract class Entity {
 
 class Competition {
     + EventStart : DateTime
-    + Disciplines : DisciplineSession
+    + DisciplineSessions : DisciplineSession[]
+    + HeadJuror : ClubMember
+    + CompetitionManager: ClubMember
 }
 
 class ClubMember {
@@ -18,15 +20,20 @@ class ClubMember {
 }
 
 enum MemberRole {
-    None = 0
+    Unspecified = 0
     Athlete = 1
     Coach = 2
     Juror = 4
+    HeadJuror = 8
 }
 
 class Discipline {
     + Name : string
-    + ScoringAlgorithm : Func<List<int>, int, double>
+    + ScoringAlgorithm : ScoringAlgorithm
+}
+
+class ScoringAlgorithm {
+    + GetScore() : double
 }
 
 class StartListEntry {
@@ -66,6 +73,7 @@ class Wheel {
 Entity <|-- Competition
 Entity <|-- DisciplineSession
 Entity <|-- Discipline
+Entity <|-- ScoringAlgorithm
 Entity <|-- ScoreBoard
 Entity <|-- PerformanceEntry
 Entity <|-- StartListEntry
@@ -81,7 +89,8 @@ StartListEntry "1" *.. "1" Wheel : Wheel
 DisciplineSession "1" *.. "1" Discipline : Discipline
 DisciplineSession "1" *.. "1" ClubMember : Juror
 DisciplineSession "1" *.. "1" ScoreBoard : ScoreBoard
-DisciplineSession "1" o.left. "*" StartListEntry : StartList
+DisciplineSession "1" o.. "*" StartListEntry : StartList
+Discipline "1" *.. "1" ScoringAlgorithm : ScoringAlgorithm
 PerformanceEntry "1" *.. "1" StartListEntry : Athlete
 PerformanceEntry "1" o.. "0..*" ScoreEntry : ScoreValues
 ScoreBoard "1" o.. "0..*" PerformanceEntry : HighScore

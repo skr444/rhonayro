@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace RhonAyro.Common.Data.ScoreKeeping
 {
     /// <summary>
@@ -9,14 +10,18 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <summary>
         /// Gets or sets the name of the discipline.
         /// </summary>
-        public string? Name { get; set; }
+        public required string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference to the scoring algorithm for this discipline.
+        /// </summary>
+        public Guid ScoringAlgorithm;
 
         /// <summary>
         /// Creates a new instance of <see cref="Discipline"/>.
         /// </summary>
         public Discipline()
         {
-            Name = null;
         }
 
         /// <inheritdoc/>

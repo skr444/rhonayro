@@ -31,7 +31,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         public Guid ScoreBoardId { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a collection of start list entry references.
         /// </summary>
         public ICollection<Guid> StartList { get; set; }
 

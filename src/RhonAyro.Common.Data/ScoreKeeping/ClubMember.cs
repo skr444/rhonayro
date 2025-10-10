@@ -8,17 +8,17 @@
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
-        public string? FirstName { get; set; }
+        public required string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
-        public string? LastName { get; set; }
+        public required string LastName { get; set; }
 
         /// <summary>
         /// Gets the full name of this member.
         /// </summary>
-        public string? FullName => $"{FirstName} {LastName}";
+        public string FullName => $"{FirstName} {LastName}";
 
         /// <summary>
         /// Gets or sets the roles this person have.
@@ -30,8 +30,6 @@
         /// </summary>
         public ClubMember()
         {
-            FirstName = null;
-            LastName = null;
             Roles = RoleType.Unspecified;
         }
 
