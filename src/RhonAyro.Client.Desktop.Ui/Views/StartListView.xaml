@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RhonAyro.Client.Desktop.Ui.Views"
+             xmlns:behaviors="clr-namespace:RhonAyro.Client.Desktop.Ui.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1000">
     <Grid>
@@ -189,9 +190,6 @@
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/> <!-- Top label -->
-                        <RowDefinition Height="auto"/> <!-- Wheel size -->
-                        <RowDefinition Height="15"/> <!-- Gap -->
-                        <RowDefinition Height="30"/> <!-- Discipline label -->
                         <RowDefinition Height="5*"/> <!-- Disciplines -->
                         <RowDefinition Height="15"/> <!-- Gap -->
                         <RowDefinition Height="30"/> <!-- Start no label -->
@@ -199,54 +197,86 @@
                         <RowDefinition Height="*"/> <!-- Button up -->
                         <RowDefinition Height="*"/> <!-- Button down -->
                     </Grid.RowDefinitions>
-                    <Label Content="Specify wheel size"
+                    <Label Content="Disciplines and wheel sizes"
                            HorizontalContentAlignment="Center"
                            VerticalContentAlignment="Center"
                            FontWeight="Bold"/>
-                    <TextBox Grid.Row="1"
-                             Text="210"
-                             Height="60"
-                             HorizontalContentAlignment="Center"
-                             VerticalContentAlignment="Center"
-                             FontSize="25"
-                             FontWeight="Bold"/>
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding DisciplinesAndWheelSizes}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="False"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="All">
+                        <DataGrid.Columns>
+                            <!-- Column 1: checkbox + discipline name -->
+                            <DataGridTemplateColumn Width="*">
+                                <DataGridTemplateColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="Discipline"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.HeaderTemplate>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Center">
+                                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      Margin="5"/>
+                                            <TextBox Text="{Binding DisciplineName, Mode=OneWay}"
+                                                     VerticalAlignment="Center"
+                                                     VerticalContentAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Column 2: wheel size (enabled only when checked) -->
+                            <DataGridTemplateColumn Width="*">
+                                <DataGridTemplateColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="Wheel size"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.HeaderTemplate>
+
+                                <!-- display mode -->
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding WheelSize, StringFormat={}{0:0.##}}"
+                                                   VerticalAlignment="Center"
+                                                   Margin="5 0 0 0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+
+                                <!-- edit mode -->
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding WheelSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.##}}"
+                                                 IsEnabled="{Binding IsSelected}"
+                                                 behaviors:TextBoxBehaviors.DigitsOnly="True"
+                                                 VerticalAlignment="Center"
+                                                 VerticalContentAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                     <Label Grid.Row="3"
-                           Content="Choose disciplines"
-                           VerticalContentAlignment="Center"
-                           HorizontalContentAlignment="Center"
-                           FontWeight="Bold"/>
-                    <StackPanel Grid.Row="4"
-                                Orientation="Vertical"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Top"
-                                Margin="5">
-                        <StackPanel.Resources>
-                            <Style TargetType="CheckBox">
-                                <Setter Property="Margin" Value="0 0 0 5"/>
-                            </Style>
-                        </StackPanel.Resources>
-                        <CheckBox Content="Straight basic"/>
-                        <CheckBox Content="Straight advanced"/>
-                        <CheckBox Content="Jump"/>
-                        <CheckBox Content="Spiral"/>
-                        <CheckBox Content="Pair"/>
-                    </StackPanel>
-                    <Label Grid.Row="6"
                            Content="Start number"
                            HorizontalContentAlignment="Center"
                            VerticalContentAlignment="Center"
                            FontWeight="Bold"/>
-                    <Label Grid.Row="7"
+                    <Label Grid.Row="4"
                            Content="3"
                            Height="60"
                            HorizontalContentAlignment="Center"
                            VerticalContentAlignment="Center"
                            FontSize="25"
                            FontWeight="Bold"/>
-                    <Button Grid.Row="8"
+                    <Button Grid.Row="5"
                             Content="Up"
                             Margin="10 2 10 2"/>
-                    <Button Grid.Row="9"
+                    <Button Grid.Row="6"
                             Content="Down"
                             Margin="10 2 10 2"/>
                 </Grid>
@@ -267,7 +297,8 @@
 
             <Button Grid.Row="3"
                     Margin="10"
-                    Content="Add to start list"/>
+                    Content="Add to start list"
+                    Command="{Binding AddToRosterCommand}"/>
 
             <Button Grid.Row="3" Grid.Column="1"
                     Margin="10"

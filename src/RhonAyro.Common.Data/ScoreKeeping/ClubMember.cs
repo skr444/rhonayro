@@ -8,12 +8,12 @@
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
-        public required string FirstName { get; set; }
+        public string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
-        public required string LastName { get; set; }
+        public string LastName { get; set; }
 
         /// <summary>
         /// Gets the full name of this member.
@@ -31,6 +31,19 @@
         public ClubMember()
         {
             Roles = RoleType.Unspecified;
+            FirstName = "";
+            LastName = "";
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ClubMember"/> using the specified first and last name.
+        /// </summary>
+        /// <param name="firstName">The member's first name.</param>
+        /// <param name="lastName">The member's last name.</param>
+        public ClubMember(string firstName, string lastName)
+        {
+            FirstName = firstName;
+            LastName = lastName;
         }
 
         /// <inheritdoc/>

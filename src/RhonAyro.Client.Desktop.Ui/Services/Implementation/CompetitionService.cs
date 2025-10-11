@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 using RhonAyro.Common.Data.ScoreKeeping;
@@ -56,6 +58,8 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             }
         }
 
+        public IEnumerable<Discipline> Disciplines { get; }
+
         public CompetitionService(IFileStorage fileStorage)
         {
             competitionRepository = fileStorage.GetRepository<ICompetitionRepository>();
@@ -63,6 +67,25 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             startListEntryRepository = fileStorage.GetRepository<IStartListEntryRepository>();
             viewStateRepository = fileStorage.GetRepository<IViewStateRepository>();
             clubMemberRepository = fileStorage.GetRepository<IClubMemberRepository>();
+
+            List<Discipline> disciplines = [.. disciplineRepository.All()];
+            if (!disciplines.Any())
+            {
+                disciplines = new List<Discipline>
+                {
+                    new Discipline { Name = "Straight basic" },
+                    new Discipline { Name = "Straight advanced" },
+                    new Discipline { Name = "Jump" },
+                    new Discipline { Name = "Spiral" },
+                    new Discipline { Name = "Pair" },
+                };
+
+                foreach (Discipline discipline in disciplines)
+                {
+                    disciplineRepository.AddOrUpdate(discipline);
+                }
+            }
+            Disciplines = new ReadOnlyCollection<Discipline>(disciplines);
 
             if (   viewStateRepository.TryGet(ActiveCompetitionIdKey, out string? competitionIdValue)
                 && Guid.TryParse(competitionIdValue, out Guid competitionId)

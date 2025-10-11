@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RhonAyro.Common.Data.ScoreKeeping
+﻿namespace RhonAyro.Common.Data.ScoreKeeping
 {
     /// <summary>
     /// Represents a type of compeditive discipline of a performance.
@@ -11,11 +9,6 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// Gets or sets the name of the discipline.
         /// </summary>
         public required string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the reference to the scoring algorithm for this discipline.
-        /// </summary>
-        public Guid ScoringAlgorithm;
 
         /// <summary>
         /// Creates a new instance of <see cref="Discipline"/>.

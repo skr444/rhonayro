@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using RhonAyro.Common.Data.ScoreKeeping;
 
@@ -10,6 +11,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services
         Competition ActiveCompetition { get; }
         ClubMember? ActiveHeadJuror { get; }
         ClubMember? ActiveManager { get; }
+        IEnumerable<Discipline> Disciplines { get; }
         void SetActiveCompetition(Guid id);
         void NewActiveCompetition();
         void RemoveActiveCompetition();
