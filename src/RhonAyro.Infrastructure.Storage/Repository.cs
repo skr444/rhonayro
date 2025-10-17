@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using RhonAyro.Common.Data;
 
@@ -11,12 +12,14 @@ namespace RhonAyro.Infrastructure.Storage
     /// <typeparam name="TData">Data type of the instance to persist.</typeparam>
     internal abstract class Repository<TData> : IRepository<TData> where TData : Entity
     {
+        private readonly object locker;
         protected IDictionary<Guid, TData> store;
 
         public int Count => store.Count;
 
         protected Repository()
         {
+            locker = new object();
             store = new Dictionary<Guid, TData>();
         }
 
@@ -25,26 +28,57 @@ namespace RhonAyro.Infrastructure.Storage
         {
             Validate(data);
 
-            store[data.Id] = data;
+            lock (locker)
+            {
+                store[data.Id] = data;
+                data.Modified = DateTime.UtcNow;
 
-            data.Modified = DateTime.UtcNow;
-            Persist();
+                Persist();
+            }
         }
 
         /// <inheritdoc />
-        public ICollection<TData> All()
+        public ICollection<TData> All(Func<TData, bool>? predicate = null)
         {
-            Acquire();
+            lock (locker)
+            {
+                Acquire();
 
-            return store.Values;
+                if (predicate == null)
+                {
+                    return store.Values;
+                }
+
+                return store.Values.Where(predicate).ToList();
+            }
         }
 
         /// <inheritdoc />
         public void Delete(Guid id)
         {
-            if (store.Remove(id))
+            lock (locker)
             {
+                if (store.Remove(id))
+                {
+                    Persist();
+                }
+            }
+        }
+
+        public int Delete(Func<TData, bool> predicate)
+        {
+            lock (locker)
+            {
+                int count = 0;
+                foreach (var item in new List<TData>(store.Values.Where(predicate)))
+                {
+                    if (store.Remove(item.Id))
+                    {
+                        count++;
+                    }
+                }
                 Persist();
+                return count;
             }
         }
 
@@ -52,9 +86,13 @@ namespace RhonAyro.Infrastructure.Storage
         public bool TryGet(Guid id, out TData? instance)
         {
             instance = null;
-            Acquire();
 
-            return store.TryGetValue(id, out instance);
+            lock (locker)
+            {
+                Acquire();
+
+                return store.TryGetValue(id, out instance);
+            }
         }
 
         /// <summary>

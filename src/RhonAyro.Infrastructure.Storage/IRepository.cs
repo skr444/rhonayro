@@ -29,8 +29,9 @@ namespace RhonAyro.Infrastructure.Storage
         /// <summary>
         /// Retrieves all existing instances from this repository.
         /// </summary>
+        /// <param name="predicate">Filter criteria.</param>
         /// <returns>A collection of available instances.</returns>
-        ICollection<TData> All();
+        ICollection<TData> All(Func<TData, bool>? predicate = null);
 
         /// <summary>
         /// Adds the provided instance to the repository if it is not present,
@@ -44,5 +45,12 @@ namespace RhonAyro.Infrastructure.Storage
         /// </summary>
         /// <param name="id">Identifier for the instance that should be removed.</param>
         void Delete(Guid id);
+
+        /// <summary>
+        /// Removes the instance with the provided identifier from this repository.
+        /// </summary>
+        /// <param name="predicate">Filter criteria.</param>
+        /// <returns>The number of deleted items.</returns>
+        int Delete(Func<TData, bool> predicate);
     }
 }

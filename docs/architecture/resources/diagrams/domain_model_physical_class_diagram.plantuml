@@ -1,0 +1,117 @@
+@startuml
+
+title Physical Domain Model - ScoreKeeping
+
+hide empty members
+
+abstract class Entity {
+    + Id : Guid
+    + Created : DateTime
+    + Modified : DateTime
+}
+
+class Competition {
+    + EventStart : DateTime
+    + DisciplineSessions : ICollection<Guid>
+    + HeadJuror : Guid
+    + CompetitionManager : Guid
+}
+
+class ClubMember {
+    + FirstName : string
+    + LastName : string
+    + FullName : string
+    + Roles : RoleType
+}
+
+enum RoleType {
+    Unspecified = 0
+    Athlete = 1
+    Coach = 2
+    Juror = 4
+    HeadJuror = 8
+}
+
+class Discipline {
+    + Name : string
+}
+
+class DisciplineSession {
+    + DisciplineId : Guid
+    + JurorId : Guid
+    + ScoreBoardId : Guid
+    + Performances : ICollection<Guid>
+    + StartList : ICollection<Guid>
+}
+
+class ScoreBoard {
+    + HighScore : ICollection<Guid>
+}
+
+class PerformanceEntry {
+    + StartListEntryId : Guid
+    + ScoreEntries : ICollection<Guid>
+    + Difficluty : double
+    + FinalScore : double
+}
+
+class ScoreEntry {
+    + JurorId : Guid
+    + Value : double
+}
+
+class StartListEntry {
+    + WheelId : Guid?
+    + AthleteId : Guid?
+    + CoachId : Guid?
+    + StartPosition : int
+}
+
+class Wheel {
+    + Size : float
+}
+
+class Logo {
+    + Name : string
+    + ImageData : byte[]
+    + Type : string
+    + CompetitionId : Guid
+}
+
+Entity <|-- Competition
+Entity <|-- ClubMember
+Entity <|-- Discipline
+Entity <|-- DisciplineSession
+Entity <|-- ScoreBoard
+Entity <|-- PerformanceEntry
+Entity <|-- ScoreEntry
+Entity <|-- StartListEntry
+Entity <|-- Wheel
+Entity <|-- Logo
+
+Competition "1" --> "0..*" DisciplineSession : DisciplineSessions (Guid)
+Competition "1" --> "0..1" ClubMember : HeadJuror (Guid)
+Competition "1" --> "0..1" ClubMember : CompetitionManager (Guid)
+
+ClubMember --> RoleType
+
+DisciplineSession "1" --> "1" Discipline : DisciplineId (Guid)
+DisciplineSession "1" --> "0..1" ClubMember : JurorId (Guid)
+DisciplineSession "1" --> "0..1" ScoreBoard : ScoreBoardId (Guid)
+DisciplineSession "1" --> "0..*" PerformanceEntry : Performances (Guid)
+DisciplineSession "1" --> "0..*" StartListEntry : StartList (Guid)
+
+ScoreBoard "1" --> "0..*" PerformanceEntry : HighScore (Guid)
+
+PerformanceEntry "1" --> "0..1" StartListEntry : StartListEntryId (Guid)
+PerformanceEntry "1" --> "0..*" ScoreEntry : ScoreEntries (Guid)
+
+ScoreEntry "1" --> "0..1" ClubMember : JurorId (Guid)
+
+StartListEntry "1" --> "0..1" Wheel : WheelId (Guid)
+StartListEntry "1" --> "0..1" ClubMember : AthleteId (Guid)
+StartListEntry "1" --> "0..1" ClubMember : CoachId (Guid)
+
+Logo "0..*" --> "1" Competition : CompetitionId (Guid)
+
+@enduml

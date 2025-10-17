@@ -14,7 +14,6 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 
         private readonly ICompetitionRepository competitionRepository;
         private readonly IDisciplineRepository disciplineRepository;
-        private readonly IStartListEntryRepository startListEntryRepository;
         private readonly IViewStateRepository viewStateRepository;
         private readonly IClubMemberRepository clubMemberRepository;
         private Competition activeCompetition;
@@ -64,7 +63,6 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         {
             competitionRepository = fileStorage.GetRepository<ICompetitionRepository>();
             disciplineRepository = fileStorage.GetRepository<IDisciplineRepository>();
-            startListEntryRepository = fileStorage.GetRepository<IStartListEntryRepository>();
             viewStateRepository = fileStorage.GetRepository<IViewStateRepository>();
             clubMemberRepository = fileStorage.GetRepository<IClubMemberRepository>();
 

@@ -54,6 +54,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         #endregion Types
 
         private readonly ICompetitionService competitionService;
+        private readonly IStartListService startListService;
         private readonly IClubMemberRepository clubMemberRepository;
         private readonly IStartListEntryRepository startListEntryRepository;
         private readonly IWheelRepository wheelRepository;
@@ -106,12 +107,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
         public ICommand AddToRosterCommand { get; }
 
-        public StartListViewModel(IFileStorage fileStorage, ICompetitionService competitionService)
+        public StartListViewModel(IFileStorage fileStorage, ICompetitionService competitionService, IStartListService startListService)
         {
             clubMemberRepository = fileStorage.GetRepository<IClubMemberRepository>();
             startListEntryRepository = fileStorage.GetRepository<IStartListEntryRepository>();
             wheelRepository = fileStorage.GetRepository<IWheelRepository>();
             this.competitionService = competitionService;
+            this.startListService = startListService;
 
             DisciplinesAndWheelSizes = new ObservableCollection<DisciplineSelectionItem>(
                 competitionService.Disciplines.Select(x => new DisciplineSelectionItem(x)));
