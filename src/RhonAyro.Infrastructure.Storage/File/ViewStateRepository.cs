@@ -55,7 +55,7 @@ namespace RhonAyro.Infrastructure.Storage.File
         /// <inheritdoc />
         public void Save<TViewModel>(string key, string value)
         {
-            ArgumentException.ThrowIfNullOrEmpty(key, nameof(key));
+            ArgumentException.ThrowIfNullOrEmpty(key);
 
             store[$"{typeof(TViewModel).Name}.{key}"] = value;
 
@@ -65,7 +65,7 @@ namespace RhonAyro.Infrastructure.Storage.File
         /// <inheritdoc />
         public void Save(string key, string value)
         {
-            ArgumentException.ThrowIfNullOrEmpty(key, nameof(key));
+            ArgumentException.ThrowIfNullOrEmpty(key);
 
             store[key] = value;
 
@@ -140,6 +140,16 @@ namespace RhonAyro.Infrastructure.Storage.File
                     await JsonSerializer.SerializeAsync(stream, store, serializeWriteOptions, lifecycleManager.Token);
                 }
             }, lifecycleManager.Token).ConfigureAwait(true).GetAwaiter().GetResult();
+        }
+
+        public bool Remove(string key)
+        {
+            return store.Remove(key);
+        }
+
+        public bool Remove<TViewModel>(string key)
+        {
+            return store.Remove($"{typeof(TViewModel).Name}.{key}");
         }
     }
 }

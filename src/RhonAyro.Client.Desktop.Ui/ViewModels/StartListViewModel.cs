@@ -51,6 +51,18 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
+        internal sealed class StartListEntryItem : ObservableObject
+        {
+            private readonly StartListEntry model;
+            private readonly IClubMemberRepository clubMemberRepository;
+            private readonly IWheelRepository wheelRepository;
+
+            public StartListEntryItem(StartListEntry item)
+            {
+                model = item;
+            }
+        }
+
         #endregion Types
 
         private readonly ICompetitionService competitionService;
@@ -60,12 +72,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private readonly IWheelRepository wheelRepository;
         private ClubMember? selectedAthlete;
         private ClubMember? selectedCoach;
-        private StartListEntry activeStartListEntry;
-        private Wheel activeWheel;
+        private StartListEntry? selectedStartListEntry;
 
         public ICollection<ClubMember> Athletes
         {
-            get => clubMemberRepository.All().Where(x => x.Roles.HasFlag(RoleType.Athlete)).ToList();
+            get => clubMemberRepository.All(x => x.Roles.HasFlag(RoleType.Athlete)).ToList();
         }
 
         public ClubMember? SelectedAthlete
@@ -75,7 +86,18 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 if ((value != null) && SetProperty(ref selectedAthlete, value))
                 {
+                    startListService.SetActiveAthlete(selectedAthlete.Id);
                     OnPropertyChanged(nameof(SelectedAthleteName));
+
+                    if (selectedCoach?.Id == value.Id)
+                    {
+                        startListService.SetActiveCoach(null);
+                        selectedCoach = null;
+                        OnPropertyChanged(nameof(SelectedCoach));
+                        OnPropertyChanged(nameof(SelectedCoachName));
+                    }
+
+                    OnPropertyChanged(nameof(Coaches));
                     (AddToRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
@@ -85,7 +107,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
         public ICollection<ClubMember> Coaches
         {
-            get => clubMemberRepository.All().Where(x => x.Roles.HasFlag(RoleType.Coach)).ToList();
+            get => clubMemberRepository.All(x =>
+                   x.Roles.HasFlag(RoleType.Coach)
+                && x.Id != selectedAthlete?.Id).ToList();
         }
 
         public ClubMember? SelectedCoach
@@ -95,6 +119,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 if ((value != null) && SetProperty(ref selectedCoach, value))
                 {
+                    startListService.SetActiveCoach(selectedCoach.Id);
                     OnPropertyChanged(nameof(SelectedCoachName));
                     (AddToRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
@@ -106,6 +131,20 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         public ObservableCollection<DisciplineSelectionItem> DisciplinesAndWheelSizes { get; }
 
         public ICommand AddToRosterCommand { get; }
+
+        public IEnumerable<StartListEntry> Roster => startListService.Roster;
+
+        public StartListEntry? SelectedStartListEntry
+        {
+            get => selectedStartListEntry;
+            set
+            {
+                if ((value != null) && SetProperty(ref selectedStartListEntry, value))
+                {
+
+                }
+            }
+        }
 
         public StartListViewModel(IFileStorage fileStorage, ICompetitionService competitionService, IStartListService startListService)
         {
@@ -139,7 +178,12 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 item.PropertyChanged += OnDisciplineItemPropertyChanged;
             }
-            
+
+            selectedAthlete = startListService.ActiveAthlete;
+            OnPropertyChanged(nameof(SelectedAthlete));
+            selectedCoach = startListService.ActiveCoach;
+            OnPropertyChanged(nameof(SelectedCoach));
+
             var startListEntry = startListEntryRepository.All().FirstOrDefault();
             if (startListEntry == null)
             {

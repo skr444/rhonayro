@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using RhonAyro.Common.Data.ScoreKeeping;
 
 namespace RhonAyro.Client.Desktop.Ui.Services
 {
-    interface IStartListService
+    internal interface IStartListService
     {
+        IEnumerable<StartListEntry> Roster { get; }
+        ClubMember? ActiveAthlete { get; }
+        ClubMember? ActiveCoach { get; }
+        void SetActiveAthlete(Guid? id);
+        void SetActiveCoach(Guid? id);
     }
 }

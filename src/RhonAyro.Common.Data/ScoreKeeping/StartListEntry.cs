@@ -8,9 +8,19 @@ namespace RhonAyro.Common.Data.ScoreKeeping
     public sealed class StartListEntry : Entity
     {
         /// <summary>
+        /// Gets or sets the reference to the associated <see cref="Competition"/>.
+        /// </summary>
+        public Guid? CompetitionId { get; set; }
+
+        /// <summary>
         /// Gets or sets the reference to the <see cref="Wheel"/> meta data instance.
         /// </summary>
         public Guid? WheelId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference to the associtated <see cref="Discipline"/> instance.
+        /// </summary>
+        public Guid? DisciplineId { get; set; }
 
         /// <summary>
         /// Gets or sets the reference to the <see cref="ClubMember"/> instance of the athlete.
@@ -33,6 +43,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         public StartListEntry()
         {
             WheelId = null;
+            DisciplineId = null;
             AthleteId = null;
             CoachId = null;
             StartPosition = 0;
@@ -41,7 +52,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{base.ToString()}, WheelId='{WheelId}', AthleteId='{AthleteId}', CoachId='{CoachId}', StartPosition='{StartPosition}'";
+            return $"{base.ToString()}, WheelId='{WheelId}', DisciplineId='{DisciplineId}', AthleteId='{AthleteId}', CoachId='{CoachId}', StartPosition='{StartPosition}'";
         }
     }
 }

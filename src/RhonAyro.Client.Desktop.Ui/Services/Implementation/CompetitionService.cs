@@ -59,12 +59,12 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 
         public IEnumerable<Discipline> Disciplines { get; }
 
-        public CompetitionService(IFileStorage fileStorage)
+        public CompetitionService(IFileStorage storage)
         {
-            competitionRepository = fileStorage.GetRepository<ICompetitionRepository>();
-            disciplineRepository = fileStorage.GetRepository<IDisciplineRepository>();
-            viewStateRepository = fileStorage.GetRepository<IViewStateRepository>();
-            clubMemberRepository = fileStorage.GetRepository<IClubMemberRepository>();
+            competitionRepository = storage.GetRepository<ICompetitionRepository>();
+            disciplineRepository = storage.GetRepository<IDisciplineRepository>();
+            viewStateRepository = storage.GetRepository<IViewStateRepository>();
+            clubMemberRepository = storage.GetRepository<IClubMemberRepository>();
 
             List<Discipline> disciplines = [.. disciplineRepository.All()];
             if (!disciplines.Any())
