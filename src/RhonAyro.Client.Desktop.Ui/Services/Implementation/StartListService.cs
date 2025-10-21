@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
-using RhonAyro.Infrastructure.Storage.File;
 
 namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 {
@@ -16,16 +13,18 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         private const string ActiveCoachIdKey = "activeCoachId";
 
         private readonly IStartListEntryRepository startListEntryRepository;
-        private readonly IDisciplineSessionRepository disciplineSessionRepository;
         private readonly IViewStateRepository viewStateRepository;
         private readonly IClubMemberRepository clubMemberRepository;
+        private readonly IWheelRepository wheelRepository;
         private readonly ICompetitionService competitionService;
-        private IList<DisciplineSession> disciplineSessions;
-        private IList<StartListEntry> startListEntries;
-        private ClubMember? activeAthlete;
-        private ClubMember? activeCoach;
 
-        public IEnumerable<StartListEntry> Roster { get; }
+        public IEnumerable<StartListEntry> Roster
+        {
+            get
+            {
+                return startListEntryRepository.All(x => x.CompetitionId == competitionService.ActiveCompetitionId);
+            }
+        }
 
         public ClubMember? ActiveAthlete
         {
@@ -57,24 +56,13 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             }
         }
 
-        public IEnumerable<StartListEntry> StartListEntries
-        {
-            get
-            {
-                return startListEntryRepository.All(x => x.CompetitionId == competitionService.ActiveCompetitionId);
-            }
-        }
-
         public StartListService(IFileStorage storage, ICompetitionService competitionService)
         {
             startListEntryRepository = storage.GetRepository<IStartListEntryRepository>();
-            disciplineSessionRepository = storage.GetRepository<IDisciplineSessionRepository>();
             viewStateRepository = storage.GetRepository<IViewStateRepository>();
             clubMemberRepository = storage.GetRepository<IClubMemberRepository>();
+            wheelRepository = storage.GetRepository<IWheelRepository>();
             this.competitionService = competitionService;
-
-            disciplineSessions = new List<DisciplineSession>();
-            startListEntries = new List<StartListEntry>();
         }
 
         public void SetActiveAthlete(Guid? id)
@@ -85,7 +73,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             }
             else
             {
-                viewStateRepository.Save(ActiveAthleteIdKey, id!.ToString());
+                viewStateRepository.Save(ActiveAthleteIdKey, id.ToString()!);
             }
         }
 
@@ -97,8 +85,40 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             }
             else
             {
-                viewStateRepository.Save(ActiveCoachIdKey, id!.ToString());
+                viewStateRepository.Save(ActiveCoachIdKey, id.ToString()!);
             }
+        }
+
+        public void AddToRoster(Guid disciplineId, float wheelSize)
+        {
+            var entry = new StartListEntry
+            {
+                CompetitionId = competitionService.ActiveCompetitionId,
+                DisciplineId = disciplineId,
+                StartPosition = startListEntryRepository.All(x => x.DisciplineId == disciplineId).Count
+            };
+
+            ArgumentNullException.ThrowIfNull(ActiveAthlete);
+            entry.AthleteId = ActiveAthlete.Id;
+
+            ArgumentNullException.ThrowIfNull(ActiveCoach);
+            entry.CoachId = ActiveCoach.Id;
+
+            Wheel? wheel = wheelRepository.All(x => x.Size == wheelSize).FirstOrDefault();
+            if (wheel == null)
+            {
+                wheel = new Wheel { Size = wheelSize };
+                wheelRepository.AddOrUpdate(wheel);
+            }
+
+            entry.WheelId = wheel.Id;
+
+            startListEntryRepository.AddOrUpdate(entry);
+        }
+
+        public void RemoveFromRoster(Guid id)
+        {
+            startListEntryRepository.Delete(id);
         }
     }
 }

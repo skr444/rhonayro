@@ -12,5 +12,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services
         ClubMember? ActiveCoach { get; }
         void SetActiveAthlete(Guid? id);
         void SetActiveCoach(Guid? id);
+        void AddToRoster(Guid disciplineId, float wheelSize);
+        void RemoveFromRoster(Guid id);
     }
 }

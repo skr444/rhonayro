@@ -29,18 +29,24 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="5">
-                <RadioButton Content="All"
-                             Margin="0 0 25 0"/>
-                <RadioButton Content="Straight basic"
-                             Margin="0 0 25 0"/>
-                <RadioButton Content="Straight advanced"
-                             Margin="0 0 25 0"/>
-                <RadioButton Content="Jump"
-                             Margin="0 0 25 0"/>
-                <RadioButton Content="Spiral"
-                             Margin="0 0 25 0"/>
-                <RadioButton Content="Pair"
-                             Margin="0 0 25 0"/>
+                <RadioButton Content="{Binding AllDisciplinesLabel}"
+                             Margin="0 0 25 0"
+                             IsChecked="{Binding AllDisciplinesChecked, Mode=OneWayToSource}"/>
+                <RadioButton Content="{Binding StraightBasicLabel}"
+                             Margin="0 0 25 0"
+                             IsChecked="{Binding StraightBasicChecked, Mode=OneWayToSource}"/>
+                <RadioButton Content="{Binding StraightAdvancedLabel}"
+                             Margin="0 0 25 0"
+                             IsChecked="{Binding StraightAdvancedChecked, Mode=OneWayToSource}"/>
+                <RadioButton Content="{Binding JumpLabel}"
+                             Margin="0 0 25 0"
+                             IsChecked="{Binding JumpChecked, Mode=OneWayToSource}"/>
+                <RadioButton Content="{Binding SpiralLabel}"
+                             Margin="0 0 25 0"
+                             IsChecked="{Binding SpiralChecked, Mode=OneWayToSource}"/>
+                <RadioButton Content="{Binding PairLabel}"
+                             Margin="0 0 25 0"
+                             IsChecked="{Binding PairChecked, Mode=OneWayToSource}"/>
             </StackPanel>
         </Grid>
 
@@ -294,15 +300,15 @@
                        FontWeight="Bold"/>
                 <DataGrid Grid.Row="1"
                           ItemsSource="{Binding Roster}"
-                          SelectedItem="{Binding SelectedStartListEntry}"
+                          SelectedItem="{Binding SelectedStartListEntryItem}"
                           IsReadOnly="True"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           CanUserDeleteRows="False">
                     <DataGrid.Columns>
-                        <!-- Full name -->
+                        <!-- Athlete name -->
                         <DataGridTextColumn
-                            Binding="{Binding FullName, Mode=OneWay}"
+                            Binding="{Binding Athlete, Mode=OneWay}"
                             IsReadOnly="True">
                             <DataGridTextColumn.HeaderTemplate>
                                 <DataTemplate>
@@ -336,11 +342,28 @@
 
                         <!-- Wheel -->
                         <DataGridTextColumn
-                            Binding="{Binding Discipline, Mode=OneWay}"
+                            Binding="{Binding WheelSize, Mode=OneWay}"
                             IsReadOnly="True">
                             <DataGridTextColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="Discipline"/>
+                                    <TextBlock Text="Wheel"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Margin" Value="5 0 5 0"/>
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Coach name -->
+                        <DataGridTextColumn
+                            Binding="{Binding Coach, Mode=OneWay}"
+                            IsReadOnly="True">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Coach"/>
                                 </DataTemplate>
                             </DataGridTextColumn.HeaderTemplate>
                             <DataGridTextColumn.ElementStyle>
@@ -361,7 +384,8 @@
 
             <Button Grid.Row="3" Grid.Column="1"
                     Margin="10"
-                    Content="Remove from start list"/>
+                    Content="Remove from start list"
+                    Command="{Binding RemoveFromRosterCommand}"/>
         </Grid>
     </Grid>
 </UserControl>

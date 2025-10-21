@@ -59,6 +59,9 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 
         public IEnumerable<Discipline> Disciplines { get; }
 
+        public Discipline? GetDiscipline(Guid id) => Disciplines.FirstOrDefault(x => x.Id == id);
+        public Discipline? GetDiscipline(string name) => Disciplines.FirstOrDefault(x => x.Name == name);
+
         public CompetitionService(IFileStorage storage)
         {
             competitionRepository = storage.GetRepository<ICompetitionRepository>();
@@ -67,15 +70,15 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             clubMemberRepository = storage.GetRepository<IClubMemberRepository>();
 
             List<Discipline> disciplines = [.. disciplineRepository.All()];
-            if (!disciplines.Any())
+            if (disciplines.Count == 0)
             {
                 disciplines = new List<Discipline>
                 {
-                    new Discipline { Name = "Straight basic" },
-                    new Discipline { Name = "Straight advanced" },
-                    new Discipline { Name = "Jump" },
-                    new Discipline { Name = "Spiral" },
-                    new Discipline { Name = "Pair" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000001"), Name = "Straight basic" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000002"), Name = "Straight advanced" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000003"), Name = "Jump" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000004"), Name = "Spiral" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000005"), Name = "Pair" },
                 };
 
                 foreach (Discipline discipline in disciplines)
