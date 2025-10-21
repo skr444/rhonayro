@@ -62,6 +62,8 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
             public Guid StartListEntryId => model.Id;
 
+            public int Position => model.StartPosition;
+
             public string Athlete
             {
                 get
@@ -252,6 +254,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                     (AddToRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
 
                     selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
                     (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
@@ -278,6 +281,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                     (AddToRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
 
                     selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
                     (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
@@ -313,10 +317,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 if ((value != null) && SetProperty(ref selectedStartListEntryItem, value))
                 {
+                    OnPropertyChanged(nameof(StartPosition));
                     (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
+
+        public int? StartPosition => selectedStartListEntryItem?.Position;
 
         public ICommand AddToRosterCommand { get; }
 
@@ -352,6 +359,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 }
 
                 selectedStartListEntryItem = null;
+                OnPropertyChanged(nameof(StartPosition));
                 (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
             };
             foreach (var item in DisciplinesAndWheelSizes)
@@ -387,6 +395,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                         MessageBoxButton.OK,
                         MessageBoxImage.Hand);
                 }
+                catch (InvalidOperationException forbiddenException)
+                {
+                    navigation.ShowMessageBox(forbiddenException.Message,
+                        "Invalid operation",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Stop);
+                }
                 catch (Exception ex)
                 {
                     var message = new StringBuilder();
@@ -411,6 +426,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 startListService.RemoveFromRoster(selectedStartListEntryItem!.StartListEntryId);
                 OnPropertyChanged(nameof(Roster));
+
+                selectedStartListEntryItem = null;
+                OnPropertyChanged(nameof(StartPosition));
             }, () =>
             {
                 return (selectedStartListEntryItem != null);
@@ -422,9 +440,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             if (args.PropertyName is nameof(DisciplineSelectionItem.IsSelected)
                 or nameof(DisciplineSelectionItem.WheelSize))
             {
+                OnPropertyChanged(nameof(Roster));
                 (AddToRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
 
                 selectedStartListEntryItem = null;
+                OnPropertyChanged(nameof(StartPosition));
                 (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
             }
         }

@@ -95,7 +95,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             {
                 CompetitionId = competitionService.ActiveCompetitionId,
                 DisciplineId = disciplineId,
-                StartPosition = startListEntryRepository.All(x => x.DisciplineId == disciplineId).Count
+                StartPosition = startListEntryRepository.All(x => x.DisciplineId == disciplineId).Count + 1
             };
 
             ArgumentNullException.ThrowIfNull(ActiveAthlete);
@@ -112,6 +112,14 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             }
 
             entry.WheelId = wheel.Id;
+
+            if (startListEntryRepository
+                    .All(x => (x.AthleteId == entry.AthleteId) && (x.DisciplineId == entry.DisciplineId)).Count > 0)
+            {
+                string discipline = competitionService.GetDiscipline(entry.DisciplineId.Value)!.Name;
+                throw new InvalidOperationException(
+                    $"Athlete '{ActiveAthlete.FullName}' is already listed for discipline '{discipline}'!");
+            }
 
             startListEntryRepository.AddOrUpdate(entry);
         }
