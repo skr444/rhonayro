@@ -85,7 +85,7 @@
             <RowDefinition Height="3"/> <!-- Gap -->
             <RowDefinition Height="50*"/> <!-- Main -->
             <RowDefinition Height="5"/> <!-- Gap -->
-            <RowDefinition Height="2*" MinHeight="33" MaxHeight="400"/> <!-- Status -->
+            <RowDefinition Height="*" MinHeight="33" MaxHeight="400"/> <!-- Status -->
         </Grid.RowDefinitions>
         
         <!-- Menu -->
@@ -102,9 +102,9 @@
         <!-- Main -->
         <Grid Grid.Row="{StaticResource UiMainRowIndex}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30*"/> <!-- Working -->
+                <ColumnDefinition Width="35*"/> <!-- Working -->
                 <ColumnDefinition Width="5"/> <!-- Splitter -->
-                <ColumnDefinition Width="1*" MinWidth="30" MaxWidth="300"/> <!-- Score -->
+                <ColumnDefinition Width="*" MinWidth="20" MaxWidth="400"/> <!-- Score -->
             </Grid.ColumnDefinitions>
 
             <!-- Working -->

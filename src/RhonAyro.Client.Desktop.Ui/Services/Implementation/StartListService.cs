@@ -128,5 +128,52 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         {
             startListEntryRepository.Delete(id);
         }
+
+        public StartListEntry? MoveRosterEntryUp(Guid entryId, Guid disciplineId)
+        {
+            if (   startListEntryRepository.TryGet(entryId, out StartListEntry? current)
+                && (current!.StartPosition > 1))
+            {
+                var entryToMove = startListEntryRepository.All(x =>
+                       (x.DisciplineId == disciplineId)
+                    && (x.StartPosition == (current!.StartPosition - 1))).FirstOrDefault();
+
+                if (entryToMove != null)
+                {
+                    entryToMove.StartPosition++;
+                    startListEntryRepository.AddOrUpdate(entryToMove);
+                }
+                current!.StartPosition--;
+                startListEntryRepository.AddOrUpdate(current);
+
+                return current;
+            }
+
+            return null;
+        }
+
+        public StartListEntry? MoveRosterEntryDown(Guid entryId, Guid disciplineId)
+        {
+            if (   startListEntryRepository.TryGet(entryId, out StartListEntry? current)
+                && (current!.StartPosition < startListEntryRepository.All(x =>
+                    x.DisciplineId == disciplineId).Count))
+            {
+                var entryToMove = startListEntryRepository.All(x =>
+                       (x.DisciplineId == disciplineId)
+                    && (x.StartPosition == (current!.StartPosition + 1))).FirstOrDefault();
+
+                if (entryToMove != null)
+                {
+                    entryToMove.StartPosition--;
+                    startListEntryRepository.AddOrUpdate(entryToMove);
+                }
+                current!.StartPosition++;
+                startListEntryRepository.AddOrUpdate(current);
+
+                return current;
+            }
+
+            return null;
+        }
     }
 }

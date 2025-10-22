@@ -16,14 +16,15 @@
         <!-- Discipline filter -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
             <Label Content="Discipline filter"
                    VerticalContentAlignment="Center"
-                   HorizontalContentAlignment="Center"
-                   FontSize="16"/>
+                   HorizontalContentAlignment="Right"
+                   FontSize="16"
+                   Margin="0 0 20 0"/>
             <StackPanel Grid.Column="1"
                         Orientation="Horizontal"
                         HorizontalAlignment="Center"
@@ -281,10 +282,12 @@
                            FontWeight="Bold"/>
                     <Button Grid.Row="5"
                             Content="Up"
-                            Margin="10 2 10 2"/>
+                            Margin="10 2 10 2"
+                            Command="{Binding MoveUpCommand}"/>
                     <Button Grid.Row="6"
                             Content="Down"
-                            Margin="10 2 10 2"/>
+                            Margin="10 2 10 2"
+                            Command="{Binding MoveDownCommand}"/>
                 </Grid>
             </Grid>
 

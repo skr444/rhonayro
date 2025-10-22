@@ -142,7 +142,7 @@
                             <Setter Property="behaviors:TextBoxBehaviors.DigitsOnly" Value="True"/>
                         </Style>
                         <Style TargetType="ColumnDefinition">
-                            <Setter Property="Width" Value="2*"/>
+                            <Setter Property="Width" Value="1*"/>
                         </Style>
                     </Grid.Resources>
                     <StackPanel>

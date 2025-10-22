@@ -53,79 +53,6 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        internal sealed class StartListEntryItem : ObservableObject
-        {
-            private readonly StartListEntry model;
-            private readonly IClubMemberRepository clubMemberRepository;
-            private readonly IDisciplineRepository disciplineRepository;
-            private readonly IWheelRepository wheelRepository;
-
-            public Guid StartListEntryId => model.Id;
-
-            public int Position => model.StartPosition;
-
-            public string Athlete
-            {
-                get
-                {
-                    if (clubMemberRepository.TryGet(model.AthleteId ?? Guid.Empty, out ClubMember? athlete))
-                    {
-                        return athlete!.FullName;
-                    }
-
-                    return String.Empty;
-                }
-            }
-
-            public string Discipline
-            {
-                get
-                {
-                    if (disciplineRepository.TryGet(model.DisciplineId ?? Guid.Empty, out Discipline? discipline))
-                    {
-                        return discipline!.Name;
-                    }
-
-                    return String.Empty;
-                }
-            }
-
-            public float WheelSize
-            {
-                get
-                {
-                    if (wheelRepository.TryGet(model.WheelId ?? Guid.Empty, out Wheel? wheel))
-                    {
-                        return wheel!.Size;
-                    }
-
-                    return 0;
-                }
-            }
-
-            public string Coach
-            {
-                get
-                {
-                    if (clubMemberRepository.TryGet(model.CoachId ?? Guid.Empty, out ClubMember? coach))
-                    {
-                        return coach!.FullName;
-                    }
-
-                    return String.Empty;
-                }
-            }
-
-            public StartListEntryItem(StartListEntry item, IClubMemberRepository clubMembers,
-                IDisciplineRepository disciplines, IWheelRepository wheels)
-            {
-                model = item;
-                clubMemberRepository = clubMembers;
-                disciplineRepository = disciplines;
-                wheelRepository = wheels;
-            }
-        }
-
         #endregion Types
 
         private readonly IStartListService startListService;
@@ -135,7 +62,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private readonly ICompetitionService competitionService;
         private ClubMember? selectedAthlete;
         private ClubMember? selectedCoach;
-        private StartListEntryItem? selectedStartListEntryItem;
+        private StartListEntryItemViewModel? selectedStartListEntryItem;
         private Guid? activeDisciplineFilter;
 
         public string AllDisciplinesLabel => "All";
@@ -148,6 +75,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     activeDisciplineFilter = null;
                     OnPropertyChanged(nameof(Roster));
+
+                    selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
+
+                    (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -163,6 +97,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     activeDisciplineFilter = Guid.Parse("dddddddd-0000-0000-0000-d00000000001");
                     OnPropertyChanged(nameof(Roster));
+
+                    selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
+
+                    (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -178,6 +119,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     activeDisciplineFilter = Guid.Parse("dddddddd-0000-0000-0000-d00000000002");
                     OnPropertyChanged(nameof(Roster));
+
+                    selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
+
+                    (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -193,6 +141,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     activeDisciplineFilter = Guid.Parse("dddddddd-0000-0000-0000-d00000000003");
                     OnPropertyChanged(nameof(Roster));
+
+                    selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
+
+                    (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -208,6 +163,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     activeDisciplineFilter = Guid.Parse("dddddddd-0000-0000-0000-d00000000004");
                     OnPropertyChanged(nameof(Roster));
+
+                    selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
+
+                    (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -223,6 +185,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     activeDisciplineFilter = Guid.Parse("dddddddd-0000-0000-0000-d00000000005");
                     OnPropertyChanged(nameof(Roster));
+
+                    selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
+
+                    (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -256,6 +225,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                     selectedStartListEntryItem = null;
                     OnPropertyChanged(nameof(StartPosition));
                     (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -283,6 +255,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                     selectedStartListEntryItem = null;
                     OnPropertyChanged(nameof(StartPosition));
                     (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -291,7 +266,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
         public ObservableCollection<DisciplineSelectionItem> DisciplinesAndWheelSizes { get; }
 
-        public IEnumerable<StartListEntryItem> Roster
+        public IEnumerable<StartListEntryItemViewModel> Roster
         {
             get
             {
@@ -299,18 +274,18 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     return startListService.Roster
                         .OrderBy(x => x.StartPosition)
-                        .Select(x => new StartListEntryItem(x, clubMemberRepository, disciplineRepository,
+                        .Select(x => new StartListEntryItemViewModel(x, clubMemberRepository, disciplineRepository,
                             wheelRepository));
                 }
 
                 return startListService.Roster
                     .Where(x => x.DisciplineId == activeDisciplineFilter)
                     .OrderBy(x => x.StartPosition)
-                    .Select(x => new StartListEntryItem(x, clubMemberRepository, disciplineRepository, wheelRepository));
+                    .Select(x => new StartListEntryItemViewModel(x, clubMemberRepository, disciplineRepository, wheelRepository));
             }
         }
 
-        public StartListEntryItem? SelectedStartListEntryItem
+        public StartListEntryItemViewModel? SelectedStartListEntryItem
         {
             get => selectedStartListEntryItem;
             set
@@ -319,6 +294,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 {
                     OnPropertyChanged(nameof(StartPosition));
                     (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -326,8 +304,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         public int? StartPosition => selectedStartListEntryItem?.Position;
 
         public ICommand AddToRosterCommand { get; }
-
         public ICommand RemoveFromRosterCommand { get; }
+        public ICommand MoveUpCommand { get; }
+        public ICommand MoveDownCommand { get; }
 
         public StartListViewModel(IFileStorage storage, ICompetitionService competitions,
             IStartListService startLists, INavigationService navigation)
@@ -360,7 +339,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
                 selectedStartListEntryItem = null;
                 OnPropertyChanged(nameof(StartPosition));
+
                 (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+
+                (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
             };
             foreach (var item in DisciplinesAndWheelSizes)
             {
@@ -415,12 +398,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 }
 
                 OnPropertyChanged(nameof(Roster));
-            }, () =>
-            {
-                return (SelectedAthlete != null)
-                    && (SelectedCoach != null)
-                    && DisciplinesAndWheelSizes.Any(x => x.IsSelected && x.WheelSize.HasValue);
-            });
+            }, () =>    (SelectedAthlete != null)
+                     && (SelectedCoach != null)
+                     && DisciplinesAndWheelSizes.Any(x => x.IsSelected && x.WheelSize.HasValue));
 
             RemoveFromRosterCommand = new RelayCommand(() =>
             {
@@ -429,10 +409,43 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
                 selectedStartListEntryItem = null;
                 OnPropertyChanged(nameof(StartPosition));
-            }, () =>
+            }, () => selectedStartListEntryItem != null);
+
+            MoveUpCommand = new RelayCommand(() =>
             {
-                return (selectedStartListEntryItem != null);
-            });
+                var item = startListService.MoveRosterEntryUp(
+                    selectedStartListEntryItem!.StartListEntryId,
+                    activeDisciplineFilter!.Value);
+
+                selectedStartListEntryItem = (item != null)
+                    ? new StartListEntryItemViewModel(item, clubMemberRepository, disciplineRepository, wheelRepository)
+                    : null;
+
+                OnPropertyChanged(nameof(Roster));
+                OnPropertyChanged(nameof(StartPosition));
+                (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+            }, () =>    (selectedStartListEntryItem != null)
+                     && (activeDisciplineFilter != null));
+
+            MoveDownCommand = new RelayCommand(() =>
+            {
+                var item = startListService.MoveRosterEntryDown(
+                    selectedStartListEntryItem!.StartListEntryId,
+                    activeDisciplineFilter!.Value);
+
+                selectedStartListEntryItem = (item != null)
+                    ? new StartListEntryItemViewModel(item, clubMemberRepository, disciplineRepository, wheelRepository)
+                    : null;
+
+                OnPropertyChanged(nameof(Roster));
+                OnPropertyChanged(nameof(StartPosition));
+                (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+            }, () =>    (selectedStartListEntryItem != null)
+                     && (activeDisciplineFilter != null));
         }
 
         private void OnDisciplineItemPropertyChanged(object? _, PropertyChangedEventArgs args)
@@ -446,6 +459,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
                 selectedStartListEntryItem = null;
                 OnPropertyChanged(nameof(StartPosition));
                 (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+
+                (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
             }
         }
     }
