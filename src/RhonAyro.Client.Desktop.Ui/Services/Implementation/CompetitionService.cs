@@ -5,6 +5,7 @@ using System.Linq;
 
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
+using RhonAyro.Infrastructure.Storage.Extensions;
 
 namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 {
@@ -88,9 +89,8 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             }
             Disciplines = new ReadOnlyCollection<Discipline>(disciplines);
 
-            if (   viewStateRepository.TryGet(ActiveCompetitionIdKey, out string? competitionIdValue)
-                && Guid.TryParse(competitionIdValue, out Guid competitionId)
-                && competitionRepository.TryGet(competitionId, out Competition? competition))
+            if (   viewStateRepository.TryGetAs(ActiveCompetitionIdKey, out Guid? competitionId)
+                && competitionRepository.TryGet(competitionId!.Value, out Competition? competition))
             {
                 activeCompetition = competition!;
             }

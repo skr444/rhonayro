@@ -20,7 +20,8 @@ namespace RhonAyro.Client.Desktop.Ui.Navigation
         }
 
         /// <inheritdoc/>
-        public void OpenOrActivate<TVm>(string header, string? key = null, Func<TVm>? factory = null) where TVm : ObservableObject
+        public void OpenOrActivate<TVm>(string header, string? key = null, Func<TVm>? factory = null)
+            where TVm : ObservableObject
         {
             var tabHost = Ioc.Default.GetService<TabHostViewModel>()!;
 

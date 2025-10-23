@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
+using RhonAyro.Infrastructure.Storage.Extensions;
 
 namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 {
     internal sealed class DisciplineSessionService : IDisciplineSessionService
     {
-        private const string ActiveSessionIdKey = "activeDisciplineSessionId";
+        private const string ActiveDisciplineIdKey = "activeDisciplineId";
+        private const string LockedSessionIdKey = "lockedSessionId";
 
         private readonly IViewStateRepository viewStateRepository;
         private readonly IDisciplineSessionRepository disciplineSessionRepository;
         private readonly IStartListService startListService;
         private readonly ICompetitionService competitionService;
-        private Guid activeDisciplineId;
+        private Guid? activeDisciplineId;
+        private DisciplineSession? activeDisciplineSession;
+        private PerformanceEntry? activePerformanceEntry;
 
         public IEnumerable<StartListEntry> Roster => startListService.Roster.Where(x =>
             x.DisciplineId == activeDisciplineId);
 
-        public Discipline ActiveDiscipline => competitionService.GetDiscipline(activeDisciplineId)!;
+        public Discipline ActiveDiscipline => startListService.GetEnlistedDiscipline(activeDisciplineId);
 
         public DisciplineSessionService(IFileStorage storage, IStartListService startLists,
             ICompetitionService competitions)
@@ -32,14 +34,21 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             startListService = startLists;
             competitionService = competitions;
 
-            if (viewStateRepository.TryGet(ActiveSessionIdKey, out string? disciplineIdValue)
-                && Guid.TryParse(disciplineIdValue, out Guid disciplineId))
+            if (viewStateRepository.TryGetAs(LockedSessionIdKey, out Guid? disciplineId))
             {
                 activeDisciplineId = disciplineId;
             }
             else
             {
-                activeDisciplineId = Guid.Parse("dddddddd-0000-0000-0000-d00000000001");
+                var discipline = startListService.EnlistedDisciplines.FirstOrDefault();
+                if (discipline != null)
+                {
+                    activeDisciplineId = discipline.Id;
+                }
+                else
+                {
+                    activeDisciplineId = Guid.Parse("dddddddd-0000-0000-0000-d00000000001");
+                }
             }
         }
 
@@ -49,7 +58,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             if (discipline != null)
             {
                 activeDisciplineId = discipline.Id;
-                viewStateRepository.Save(ActiveSessionIdKey, activeDisciplineId.ToString());
+                viewStateRepository.Save(LockedSessionIdKey, discipline.Id.ToString());
             }
         }
     }

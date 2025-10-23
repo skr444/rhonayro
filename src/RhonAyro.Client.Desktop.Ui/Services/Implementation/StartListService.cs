@@ -4,6 +4,7 @@ using System.Linq;
 
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
+using RhonAyro.Infrastructure.Storage.Extensions;
 
 namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 {
@@ -30,9 +31,8 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         {
             get
             {
-                if (   viewStateRepository.TryGet(ActiveAthleteIdKey, out string? athleteIdValue)
-                    && Guid.TryParse(athleteIdValue, out Guid athleteId)
-                    && clubMemberRepository.TryGet(athleteId, out ClubMember? athlete))
+                if (   viewStateRepository.TryGetAs(ActiveAthleteIdKey, out Guid? athleteId)
+                    && clubMemberRepository.TryGet(athleteId!.Value, out ClubMember? athlete))
                 {
                     return athlete;
                 }
@@ -45,14 +45,32 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         {
             get
             {
-                if (viewStateRepository.TryGet(ActiveCoachIdKey, out string? coachIdValue)
-                    && Guid.TryParse(coachIdValue, out Guid coachId)
-                    && clubMemberRepository.TryGet(coachId, out ClubMember? coach))
+                if (   viewStateRepository.TryGetAs(ActiveCoachIdKey, out Guid? coachId)
+                    && clubMemberRepository.TryGet(coachId!.Value, out ClubMember? coach))
                 {
                     return coach;
                 }
 
                 return null;
+            }
+        }
+
+        public IEnumerable<Discipline> EnlistedDisciplines
+        {
+            get
+            {
+                var disciplineIds = Roster
+                    .Where(x => x.DisciplineId != null)
+                    .GroupBy(x => x.DisciplineId)
+                    .Select(x => x.Key!.Value);
+                foreach (Guid id in disciplineIds)
+                {
+                    var candidate = competitionService.GetDiscipline(id);
+                    if (candidate != null)
+                    {
+                        yield return candidate;
+                    }
+                }
             }
         }
 
@@ -174,6 +192,27 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             }
 
             return null;
+        }
+
+        public Discipline GetEnlistedDiscipline(Guid? id = null)
+        {
+            Discipline? candidate = null;
+
+            if (id == null)
+            {
+                candidate = EnlistedDisciplines.FirstOrDefault();
+            }
+            else
+            {
+                candidate = EnlistedDisciplines.FirstOrDefault(x => x.Id == id!);
+            }
+
+            if (candidate == null)
+            {
+                candidate = competitionService.Disciplines.First();
+            }
+
+            return candidate!;
         }
     }
 }

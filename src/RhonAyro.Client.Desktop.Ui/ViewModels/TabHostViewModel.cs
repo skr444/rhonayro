@@ -42,7 +42,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         public override bool ProcessCloseRequest()
         {
             lifecycleManager.Cancel();
-            return true;
+            return base.ProcessCloseRequest();
         }
     }
 }

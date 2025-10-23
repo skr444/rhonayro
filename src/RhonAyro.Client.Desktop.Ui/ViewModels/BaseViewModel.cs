@@ -36,7 +36,10 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         /// </summary>
         protected void RequestClose()
         {
-            CloseRequested?.Invoke(this, EventArgs.Empty);
+            if (ProcessCloseRequest())
+            {
+                CloseRequested?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>

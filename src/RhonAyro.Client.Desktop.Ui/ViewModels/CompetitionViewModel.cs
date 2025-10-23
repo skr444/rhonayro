@@ -14,47 +14,68 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 {
     internal sealed class CompetitionViewModel : ObservableObject
     {
-        #region Types
-
-        internal sealed class DisciplineItem : ObservableObject
-        {
-            public Discipline Discipline { get; }
-            public string Name => Discipline.Name;
-
-            public DisciplineItem(Discipline discipline)
-            {
-                Discipline = discipline;
-            }
-        }
-
-        #endregion Types
-
         private readonly IClubMemberRepository clubMemberRepository;
         private readonly IDisciplineRepository disciplineRepository;
         private readonly IWheelRepository wheelRepository;
         private readonly ICompetitionService competitionService;
         private readonly IStartListService startListService;
         private readonly IDisciplineSessionService disciplineSessionService;
-        private DisciplineItem selectedDiscipline;
+        private DisciplineItemViewModel selectedDiscipline;
+        private bool isSessionLocked;
+        private Guid? lockedSession;
 
-        public IEnumerable<StartListEntryItemViewModel> Roster => disciplineSessionService.Roster.Select(x =>
-            new StartListEntryItemViewModel(x, clubMemberRepository, disciplineRepository, wheelRepository));
+        public ObservableCollection<DisciplineItemViewModel> DisciplineItems { get; } = [];
 
-        public ObservableCollection<DisciplineItem> DisciplineItems { get; } = new();
-
-        public DisciplineItem SelectedDiscipline
+        public DisciplineItemViewModel SelectedDiscipline
         {
             get => selectedDiscipline;
             set
             {
                 if ((value != null) && SetProperty(ref selectedDiscipline, value))
                 {
+                    disciplineSessionService.SetActiveDiscipline(selectedDiscipline.Discipline.Id);
                     OnPropertyChanged(nameof(Roster));
                 }
             }
         }
 
+        public bool IsSessionLocked
+        {
+            get => isSessionLocked;
+            set
+            {
+                if (value && SetProperty(ref isSessionLocked, value))
+                {
+                    lockedSession = selectedDiscipline.Discipline.Id;
+                }
+            }
+        }
 
+        public IEnumerable<StartListEntryItemViewModel> Roster => disciplineSessionService.Roster.Select(x =>
+            new StartListEntryItemViewModel(x, clubMemberRepository, disciplineRepository, wheelRepository));
+
+        public string StartNumber
+        {
+            get
+            {
+                return "1";
+            }
+        }
+
+        public string Athlete
+        {
+            get => "Pirmin Zurbrügg";
+        }
+
+        public string Coach
+        {
+            get => "Gaby";
+        }
+
+        public string WheelSize
+        {
+            get => "230";
+        }
 
         public CompetitionViewModel(IFileStorage storage, ICompetitionService competitions, IStartListService startLists, IDisciplineSessionService disciplineSessions)
         {
@@ -70,17 +91,9 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
 
         private void RefreshDisciplineSelections()
         {
-            var options = disciplineSessionService.Roster
-                .GroupBy(r => r.DisciplineId)
-                .Select(x => new { DiscplineId = x.Key, Count = x.Count() })
-                .Where(x => x.Count > 0)
-                .Select(x => GetDiscipline(x.DiscplineId))
-                .Where(x => x != null)
-                .Select(x => new DisciplineItem(x!))
-                .ToList();
-
             // Update collection
-            DisciplineItems.ReplaceWith(options); // helper extension: Clear + AddRange
+            DisciplineItems.ReplaceWith(startListService.EnlistedDisciplines
+                .Select(x => new DisciplineItemViewModel(GetDiscipline(x.Id)!)));
 
             // Preserve selection if still valid
             if (selectedDiscipline is null ||

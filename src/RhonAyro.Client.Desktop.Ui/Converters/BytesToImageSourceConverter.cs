@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace RhonAyro.Client.Desktop.Ui.Converters
 {
-    internal class BytesToImageSourceConverter : IValueConverter
+    internal sealed class BytesToImageSourceConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

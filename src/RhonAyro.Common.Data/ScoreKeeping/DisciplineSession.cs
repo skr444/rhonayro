@@ -31,23 +31,17 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         public Guid ScoreBoardId { get; set; }
 
         /// <summary>
-        /// Gets or sets a collection of start list entry references.
-        /// </summary>
-        public ICollection<Guid> StartList { get; set; }
-
-        /// <summary>
         /// Creates a new instance of <see cref="DisciplineSession"/>.
         /// </summary>
         public DisciplineSession()
         {
             Performances = new HashSet<Guid>();
-            StartList = new HashSet<Guid>();
         }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{base.ToString()}, DisciplineId='{DisciplineId}', JurorId='{JurorId}', Performances='{Performances.ToCustomString()}', ScoreBoardId='{ScoreBoardId}', StartList='{StartList.ToCustomString()}'";
+            return $"{base.ToString()}, DisciplineId='{DisciplineId}', JurorId='{JurorId}', Performances='{Performances.ToCustomString()}', ScoreBoardId='{ScoreBoardId}'";
         }
     }
 }

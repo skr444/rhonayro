@@ -11,5 +11,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services
     internal interface IDisciplineSessionService
     {
         IEnumerable<StartListEntry> Roster { get; }
+        Discipline ActiveDiscipline { get; }
+        void SetActiveDiscipline(Guid id);
     }
 }

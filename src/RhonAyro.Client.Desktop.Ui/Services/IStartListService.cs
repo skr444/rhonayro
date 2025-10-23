@@ -10,11 +10,13 @@ namespace RhonAyro.Client.Desktop.Ui.Services
         IEnumerable<StartListEntry> Roster { get; }
         ClubMember? ActiveAthlete { get; }
         ClubMember? ActiveCoach { get; }
+        IEnumerable<Discipline> EnlistedDisciplines { get; }
         void SetActiveAthlete(Guid? id);
         void SetActiveCoach(Guid? id);
         void AddToRoster(Guid disciplineId, float wheelSize);
         void RemoveFromRoster(Guid id);
         StartListEntry? MoveRosterEntryUp(Guid entryId, Guid disciplineId);
         StartListEntry? MoveRosterEntryDown(Guid entryId, Guid disciplineId);
+        Discipline GetEnlistedDiscipline(Guid? id = null);
     }
 }
