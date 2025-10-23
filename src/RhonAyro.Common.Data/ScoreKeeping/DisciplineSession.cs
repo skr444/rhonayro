@@ -18,7 +18,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <summary>
         /// Gets or sets the reference to the <see cref="ClubMember"/> identifying the juror responsible for this session.
         /// </summary>
-        public Guid JurorId { get; set; }
+        public Guid? JurorId { get; set; }
 
         /// <summary>
         /// Gets or sets a collection of references to performances carried out during this session.

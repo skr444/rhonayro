@@ -5,6 +5,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RhonAyro.Client.Desktop.Ui.Views"
+             xmlns:vm="clr-namespace:RhonAyro.Client.Desktop.Ui.ViewModels"
              xmlns:behaviors="clr-namespace:RhonAyro.Client.Desktop.Ui.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1000">
@@ -15,31 +16,59 @@
         </Grid.RowDefinitions>
 
         <!-- Choose discipline -->
-        <StackPanel Grid.ColumnSpan="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Margin="5">
-            <StackPanel.Resources>
-                <Style TargetType="RadioButton">
-                    <Setter Property="FontSize" Value="20"/>
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Setter Property="Margin" Value="30 0 30 0"/>
-                    <Setter Property="Foreground" Value="Black"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Foreground" Value="Red"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </Trigger>
-                    </Style.Triggers>
+        <ListBox Grid.ColumnSpan="2"
+                 ItemsSource="{Binding DisciplineOptions}"
+                 SelectedItem="{Binding SelectedDisciplineOption, Mode=TwoWay}"
+                 BorderThickness="0"
+                 HorizontalContentAlignment="Stretch"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 Margin="5">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <!-- Remove default selection chrome -->
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Margin" Value="15,0"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
                 </Style>
-            </StackPanel.Resources>
-            <RadioButton Content="Straight basic"/>
-            <RadioButton Content="Straight advanced"/>
-            <RadioButton Content="Jump"/>
-            <RadioButton Content="Spiral"/>
-            <RadioButton Content="Pair"/>
-        </StackPanel>
+            </ListBox.ItemContainerStyle>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:CompetitionViewModel}">
+                    <!-- Use a RadioButton-look, but selection is driven by ListBox -->
+                    <RadioButton Content="{Binding Display}"
+                                 FontSize="20"
+                                 VerticalContentAlignment="Center"
+                                 IsChecked="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected, Mode=TwoWay}">
+                        <RadioButton.Style>
+                            <Style TargetType="RadioButton">
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="FontWeight" Value="Normal"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </RadioButton.Style>
+                        <RadioButton.InputBindings>
+                            <!-- Optional: click entire ListBoxItem space selects the item -->
+                            <MouseBinding MouseAction="LeftClick"
+                                          Command="{Binding DataContext.SelectDisciplineCommand,
+                                                            RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                          CommandParameter="{Binding}"/>
+                        </RadioButton.InputBindings>
+                    </RadioButton>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <!-- Competition view -->
         <Grid Grid.Row="1">
