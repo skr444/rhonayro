@@ -89,8 +89,8 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             }
             Disciplines = new ReadOnlyCollection<Discipline>(disciplines);
 
-            if (   viewStateRepository.TryGetAs(ActiveCompetitionIdKey, out Guid? competitionId)
-                && competitionRepository.TryGet(competitionId!.Value, out Competition? competition))
+            if (   viewStateRepository.TryGetAs(ActiveCompetitionIdKey, out Guid competitionId)
+                && competitionRepository.TryGet(competitionId, out Competition? competition))
             {
                 activeCompetition = competition!;
             }

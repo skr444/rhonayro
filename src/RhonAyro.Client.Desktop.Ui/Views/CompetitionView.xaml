@@ -32,10 +32,12 @@
                       ToolTip="Choose a discipline and confirm to start the session."/>
 
             <!-- Confirm starts & locks the session -->
-            <Button Content="Confirm"
+            <Button Content="{Binding SessionControlButtonText, Mode=OneWay}"
                     Margin="12 0 0 0"
                     Padding="16 6"
-                    Command="{Binding ConfirmSelectionCommand}"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Command="{Binding StartSessionCommand}"
                     IsDefault="True" />
 
             <!-- Optional: visible only while locked to allow manual ending during dev/tests -->
@@ -71,6 +73,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="Margin" Value="5 0 5 0"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="FontSize" Value="14"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -88,6 +91,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="Margin" Value="5 0 5 0"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>

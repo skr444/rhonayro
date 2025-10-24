@@ -9,6 +9,8 @@ using RhonAyro.Client.Desktop.Ui.Services;
 using RhonAyro.Common.Data.ScoreKeeping;
 using RhonAyro.Infrastructure.Storage.Api;
 using RhonAyro.Client.Desktop.Ui.Extensions;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace RhonAyro.Client.Desktop.Ui.ViewModels
 {
@@ -17,16 +19,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private readonly IClubMemberRepository clubMemberRepository;
         private readonly IDisciplineRepository disciplineRepository;
         private readonly IWheelRepository wheelRepository;
-        private readonly ICompetitionService competitionService;
-        private readonly IStartListService startListService;
         private readonly IDisciplineSessionService disciplineSessionService;
-        private DisciplineItemViewModel selectedDiscipline;
+        private DisciplineItemViewModel? selectedDiscipline;
         private bool isSessionLocked;
-        private Guid? lockedSession;
 
         public ObservableCollection<DisciplineItemViewModel> DisciplineItems { get; } = [];
 
-        public DisciplineItemViewModel SelectedDiscipline
+        public DisciplineItemViewModel? SelectedDiscipline
         {
             get => selectedDiscipline;
             set
@@ -46,13 +45,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 if (value && SetProperty(ref isSessionLocked, value))
                 {
-                    lockedSession = selectedDiscipline.Discipline.Id;
                 }
             }
         }
 
-        public IEnumerable<StartListEntryItemViewModel> Roster => disciplineSessionService.Roster.Select(x =>
-            new StartListEntryItemViewModel(x, clubMemberRepository, disciplineRepository, wheelRepository));
+        public IEnumerable<StartListEntryItemViewModel> Roster => ConvertRoster(disciplineSessionService.Roster);
 
         public string StartNumber
         {
@@ -77,14 +74,23 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             get => "230";
         }
 
-        public CompetitionViewModel(IFileStorage storage, ICompetitionService competitions, IStartListService startLists, IDisciplineSessionService disciplineSessions)
+        public string SessionControlButtonText { get; private set; }
+
+        public ICommand StartSessionCommand { get; }
+
+        public CompetitionViewModel(IFileStorage storage, IDisciplineSessionService disciplineSessions)
         {
             clubMemberRepository = storage.GetRepository<IClubMemberRepository>();
             disciplineRepository = storage.GetRepository<IDisciplineRepository>();
             wheelRepository = storage.GetRepository<IWheelRepository>();
-            startListService = startLists;
-            competitionService = competitions;
             disciplineSessionService = disciplineSessions;
+
+            SessionControlButtonText = "Start session";
+
+            StartSessionCommand = new RelayCommand(() =>
+            {
+
+            });
 
             RefreshDisciplineSelections();
         }
@@ -92,8 +98,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private void RefreshDisciplineSelections()
         {
             // Update collection
-            DisciplineItems.ReplaceWith(startListService.EnlistedDisciplines
-                .Select(x => new DisciplineItemViewModel(GetDiscipline(x.Id)!)));
+            DisciplineItems.ReplaceWith(ConvertDisciplines(disciplineSessionService.EnlistedDisciplines));
 
             // Preserve selection if still valid
             if (selectedDiscipline is null ||
@@ -101,14 +106,24 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 SelectedDiscipline = DisciplineItems.FirstOrDefault();
             }
+        }
 
-            Discipline? GetDiscipline(Guid? id)
+        private IEnumerable<StartListEntryItemViewModel> ConvertRoster(IEnumerable<StartListEntry> items)
+        {
+            foreach (StartListEntry item in items)
             {
-                if (disciplineRepository.TryGet(id ?? Guid.Empty, out Discipline? discipline))
-                {
-                    return discipline;
-                }
-                return null;
+                yield return new StartListEntryItemViewModel(item,
+                    clubMemberRepository,
+                    disciplineRepository,
+                    wheelRepository);
+            }
+        }
+
+        private static IEnumerable<DisciplineItemViewModel> ConvertDisciplines(IEnumerable<Discipline> items)
+        {
+            foreach (Discipline item in items)
+            {
+                yield return new DisciplineItemViewModel(item);
             }
         }
     }

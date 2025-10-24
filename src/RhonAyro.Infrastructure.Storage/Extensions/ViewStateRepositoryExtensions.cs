@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using RhonAyro.Common.Utils.Conversion;
 using RhonAyro.Infrastructure.Storage.Api;
 
 namespace RhonAyro.Infrastructure.Storage.Extensions
@@ -37,13 +38,13 @@ namespace RhonAyro.Infrastructure.Storage.Extensions
                 throw new KeyNotFoundException($"No entry found for '{key}'.");
             }
 
-            if (value is not T result)
+            if (!GenericConverter.TryConvert(value, out T? result))
             {
                 throw new ArgumentException($"Type mismatch. Value for '{key}' is not a valid '{typeof(T).Name}'.",
                     nameof(T));
             }
 
-            return result;
+            return result!;
         }
 
         /// <summary>
@@ -74,13 +75,13 @@ namespace RhonAyro.Infrastructure.Storage.Extensions
                 throw new KeyNotFoundException($"No entry found for '{key}'.");
             }
 
-            if (value is not T result)
+            if (!GenericConverter.TryConvert(value, out T? result))
             {
                 throw new ArgumentException($"Type mismatch. Value for '{key}' is not a valid '{typeof(T).Name}'.",
                     nameof(T));
             }
 
-            return result;
+            return result!;
         }
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace RhonAyro.Infrastructure.Storage.Extensions
                 return false;
             }
 
-            if (rawValue is not T result)
+            if (!GenericConverter.TryConvert(rawValue, out T? result))
             {
                 return false;
             }
@@ -155,7 +156,7 @@ namespace RhonAyro.Infrastructure.Storage.Extensions
                 return false;
             }
 
-            if (rawValue is not T result)
+            if (!GenericConverter.TryConvert(rawValue, out T? result))
             {
                 return false;
             }

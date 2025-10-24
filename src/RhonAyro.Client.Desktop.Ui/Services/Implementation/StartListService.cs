@@ -19,13 +19,8 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         private readonly IWheelRepository wheelRepository;
         private readonly ICompetitionService competitionService;
 
-        public IEnumerable<StartListEntry> Roster
-        {
-            get
-            {
-                return startListEntryRepository.All(x => x.CompetitionId == competitionService.ActiveCompetitionId);
-            }
-        }
+        public IEnumerable<StartListEntry> Roster =>
+            startListEntryRepository.All(x => x.CompetitionId == competitionService.ActiveCompetitionId);
 
         public ClubMember? ActiveAthlete
         {

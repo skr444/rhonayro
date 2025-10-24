@@ -25,6 +25,9 @@
       "rhonayro.common.data": {
         "type": "Project"
       },
+      "rhonayro.common.utils": {
+        "type": "Project"
+      },
       "rhonayro.infrastructure.runtime": {
         "type": "Project"
       },
@@ -32,6 +35,7 @@
         "type": "Project",
         "dependencies": {
           "RhonAyro.Common.Data": "[1.0.0, )",
+          "RhonAyro.Common.Utils": "[1.0.0, )",
           "RhonAyro.Infrastructure.Runtime": "[1.0.0, )"
         }
       }

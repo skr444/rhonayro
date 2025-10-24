@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhonAyro.Infrastructure.Sto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhonAyro.Infrastructure.Runtime", "src\RhonAyro.Infrastructure.Runtime\RhonAyro.Infrastructure.Runtime.csproj", "{9E5B6518-A999-49FA-8DDD-71B9CCA48C36}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhonAyro.Common.Utils", "src\RhonAyro.Common.Utils\RhonAyro.Common.Utils.csproj", "{1CB65965-7582-4630-9B72-F657EBE0A47A}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		src\VersionInfo.cs = src\VersionInfo.cs
@@ -40,6 +42,10 @@ Global
 		{9E5B6518-A999-49FA-8DDD-71B9CCA48C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E5B6518-A999-49FA-8DDD-71B9CCA48C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E5B6518-A999-49FA-8DDD-71B9CCA48C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CB65965-7582-4630-9B72-F657EBE0A47A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CB65965-7582-4630-9B72-F657EBE0A47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CB65965-7582-4630-9B72-F657EBE0A47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CB65965-7582-4630-9B72-F657EBE0A47A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,9 @@
       "rhonayro.common.data": {
         "type": "Project"
       },
+      "rhonayro.common.utils": {
+        "type": "Project"
+      },
       "rhonayro.infrastructure.runtime": {
         "type": "Project"
       }

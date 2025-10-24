@@ -4,10 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>RhonAyro.Infrastructure.Storage</RootNamespace>
-    <AssemblyName>RhonAyro.Infrastructure.Storage</AssemblyName>
-    <PackageId>RhonAyro.Infrastructure.Storage</PackageId>
-    <Authors>RhonAyro.Infrastructure.Storage</Authors>
+    <RootNamespace>RhonAyro.Common.Utils</RootNamespace>
+    <AssemblyName>RhonAyro.Common.Utils</AssemblyName>
+    <PackageId>RhonAyro.Common.Utils</PackageId>
+    <Authors>RhonAyro.Common.Utils</Authors>
     <OutputPath>..\..\build\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -20,7 +20,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <NoWarn />
-    <DocumentationFile>..\..\build\$(Configuration)\RhonAyro.Infrastructure.Storage.xml</DocumentationFile>
+    <DocumentationFile>..\..\build\$(Configuration)\RhonAyro.Common.Utils.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -36,12 +36,6 @@
 
   <ItemGroup>
     <Compile Include="..\VersionInfo.cs" Link="Properties\VersionInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\RhonAyro.Common.Data\RhonAyro.Common.Data.csproj" />
-    <ProjectReference Include="..\RhonAyro.Common.Utils\RhonAyro.Common.Utils.csproj" />
-    <ProjectReference Include="..\RhonAyro.Infrastructure.Runtime\RhonAyro.Infrastructure.Runtime.csproj" />
   </ItemGroup>
 
 </Project>
