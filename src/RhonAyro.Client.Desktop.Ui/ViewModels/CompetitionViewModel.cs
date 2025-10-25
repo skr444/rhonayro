@@ -24,7 +24,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private DisciplineItemViewModel? selectedDiscipline;
         private bool hasNext;
         private bool hasPrevious;
-        private int difficulty;
+        private float difficulty;
         private float scoreOne;
         private float scoreTwo;
         private float scoreThree;
@@ -104,7 +104,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        public int Difficulty
+        public float Difficulty
         {
             get => difficulty;
             set
@@ -270,9 +270,12 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        private static float CalculateScore(int difficulty, params float[] scoreValues)
+        private static float CalculateScore(float difficulty, params float[] scoreValues)
         {
-            ArgumentNullException.ThrowIfNull(scoreValues);
+            if (scoreValues == null)
+            {
+                return 0;
+            }
             if (scoreValues.Length != 4)
             {
                 throw new ArgumentException($"Expecting exactly four score values, but got {scoreValues.Length}.",
@@ -283,8 +286,13 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             float highest = scoreValues.Max();
 
             var eligibleScores = scoreValues.Except([lowest, highest]);
+            if (!eligibleScores.Any())
+            {
+                return 0;
+            }
+
             var average = eligibleScores.Average();
-            return average * difficulty;
+            return average + difficulty;
         }
     }
 }

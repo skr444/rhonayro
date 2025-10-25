@@ -149,7 +149,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 
         private const string ActiveDisciplineIdKey = "activeDisciplineId";
         private const string ActiveSessionIdKey = "activeSessionId";
-        private const string ActiveStartListEntryIdKey = "ActiveStartListEntryId";
+        private const string ActiveStartListEntryIdKey = "activeStartListEntryId";
         private const string ActivePerformanceEntryIdKey = "activePerformanceEntryId";
 
         private readonly IViewStateRepository viewStateRepository;

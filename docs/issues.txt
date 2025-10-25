@@ -1,0 +1,33 @@
+start list check: same athlete cannot be added twice to the same discipline
+-> this is checked across all data instead of restricted per competition
+
+straight with music
+-> is a separate discipline!!!!!!!!!
+
+
+straight with music
+-> additional score for music and synchronicity
+
+jump
+-> two jumps, both fully scored, the better of the two is added to score board (while the worse is discarded)
+
+clubmember enlisting
+-> sometimes the last empty row disappears, preventing adding of further members
+
+pair discipline
+-> needs two contestants
+
+wheel management
+-> enlist wheels separately
+
+roster
+-> show counter
+
+discipline filter for session
+-> enlisted disciplines are loaded at app start, not on tab switch
+   this requires an app restart to correctly load the discipline filter after the roster was established
+
+deductions
+-> all scorings have deductions
+
+
