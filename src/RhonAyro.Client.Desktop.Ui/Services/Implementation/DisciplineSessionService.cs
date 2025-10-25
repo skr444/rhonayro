@@ -32,13 +32,15 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             public Discipline Discipline => discipline;
             public IEnumerable<StartListEntry> Entries => entries;
 
-            public ActiveStartListEntries(Discipline discipline, IEnumerable<StartListEntry> items)
+            public ActiveStartListEntries(Discipline discipline, IStartListService startListService)
             {
                 ArgumentNullException.ThrowIfNull(discipline);
-                ArgumentNullException.ThrowIfNull(items);
+                ArgumentNullException.ThrowIfNull(startListService);
 
                 this.discipline = discipline;
-                entries = [.. items];
+                entries = [.. startListService.Roster
+                    .Where(x => x.DisciplineId == discipline.Id)
+                    .OrderBy(x => x.StartPosition)];
                 Index = 0;
             }
 
@@ -72,26 +74,32 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         private sealed class ActiveSession
         {
             private readonly IPerformanceEntryRepository performanceEntryRepository;
-            private ActiveStartListEntries roster;
-            public DisciplineSession Session { get; }
-            public ScoreBoard Score { get; }
+            private readonly Func<StartListEntry> currentStartListEntry;
+            private readonly Func<bool> moveNext;
+            private readonly Func<bool> goBack;
+            public DisciplineSession Session { get; private set; }
+            public ScoreBoard Score { get; private set; }
             public PerformanceEntry? Performance { get; private set; }
-            public ActiveSession(IPerformanceEntryRepository performanceEntries, ActiveStartListEntries roster, DisciplineSession session, ScoreBoard score)
+            public ActiveSession(IPerformanceEntryRepository performanceEntries, DisciplineSession session,
+                Func<StartListEntry> getCurrentStartListEntry, Func<bool> nextStartListEntry,
+                Func<bool> previousStartListEntry)
             {
                 performanceEntryRepository = performanceEntries;
-                this.roster = roster;
                 Session = session;
-                Score = score;
+                currentStartListEntry = getCurrentStartListEntry;
+                moveNext = nextStartListEntry;
+                goBack = previousStartListEntry;
 
-                Performance = GetPerformanceEntryByStartListEntryId(performanceEntryRepository, roster.Current.Id);
+                Performance = GetPerformanceEntryByStartListEntryId(performanceEntryRepository,
+                    currentStartListEntry().Id);
             }
 
             public bool MoveNext()
             {
-                if (roster.MoveNext())
+                if (moveNext())
                 {
                     Performance = GetPerformanceEntryByStartListEntryId(performanceEntryRepository,
-                        roster.Current.Id);
+                        currentStartListEntry().Id);
 
                     return true;
                 }
@@ -101,10 +109,10 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
 
             public bool GoBack()
             {
-                if (roster.GoBack())
+                if (goBack())
                 {
                     Performance = GetPerformanceEntryByStartListEntryId(performanceEntryRepository,
-                        roster.Current.Id);
+                        currentStartListEntry().Id);
 
                     return true;
                 }
@@ -147,10 +155,11 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         private readonly IDisciplineSessionRepository disciplineSessionRepository;
         private readonly IPerformanceEntryRepository performanceEntryRepository;
         private readonly IScoreEntryRepository scoreEntryRepository;
+        private readonly IScoreBoardRepository scoreBoardRepository;
         private readonly IStartListService startListService;
         private readonly ICompetitionService competitionService;
-        private ActiveSession? activeDisciplineSession;
         private ActiveStartListEntries? activeStartListEntries;
+        private ActiveSession? activeDisciplineSession;
         private PerformanceEntry? activePerformanceEntry;
         private ScoreBoard? activeScoreBoard;
         private ScoreEntry? activeScoreEntry;
@@ -158,10 +167,10 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         public IEnumerable<Discipline> EnlistedDisciplines => startListService.EnlistedDisciplines;
 
         public IEnumerable<StartListEntry> Roster => (activeStartListEntries != null)
-            ? startListService.Roster
-                .Where(x => x.DisciplineId == activeStartListEntries.Discipline.Id)
-                .OrderBy(x => x.StartPosition)
+            ? activeStartListEntries.Entries
             : [];
+
+        public StartListEntry? Current => activeStartListEntries?.Current;
 
         public bool HasActiveSession => (activeDisciplineSession != null);
 
@@ -171,16 +180,20 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             viewStateRepository = storage.GetRepository<IViewStateRepository>();
             disciplineSessionRepository = storage.GetRepository<IDisciplineSessionRepository>();
             performanceEntryRepository = storage.GetRepository<IPerformanceEntryRepository>();
+            scoreBoardRepository = storage.GetRepository<IScoreBoardRepository>();
             startListService = startLists;
             competitionService = competitions;
 
             activeStartListEntries = null;
+            activeDisciplineSession = null;
             if (viewStateRepository.TryGetAs(ActiveSessionIdKey, out Guid sessionId)
                 && disciplineSessionRepository.TryGet(sessionId, out DisciplineSession? session))
             {
-                activeDisciplineSession = new ActiveSession(performanceEntryRepository, Roster, session);
                 activeStartListEntries = new ActiveStartListEntries(
-                    competitionService.GetDiscipline(activeDisciplineSession!.DisciplineId)!, Roster);
+                    competitionService.GetDiscipline(session!.DisciplineId)!, startListService);
+                activeDisciplineSession = new ActiveSession(performanceEntryRepository, session,
+                    () => activeStartListEntries.Current, activeStartListEntries.MoveNext,
+                    activeStartListEntries.GoBack);
             }
         }
 
@@ -194,7 +207,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             var discipline = competitionService.GetDiscipline(id);
             if (discipline != null)
             {
-                activeStartListEntries = new ActiveStartListEntries(discipline, Roster);
+                activeStartListEntries = new ActiveStartListEntries(discipline, startListService);
             }
             else
             {
@@ -213,27 +226,31 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
                 throw new InvalidOperationException("No discipline selected.");
             }
 
-            activeDisciplineSession = new DisciplineSession
-            {
-                DisciplineId = activeStartListEntries.Discipline.Id,
-                
-            };
+            activeDisciplineSession = new ActiveSession(performanceEntryRepository,
+                GetDisciplineSession(competitionService, disciplineSessionRepository,
+                    activeStartListEntries.Discipline.Id),
+                () => activeStartListEntries.Current, activeStartListEntries.MoveNext, activeStartListEntries.GoBack);
+            viewStateRepository.Save(ActiveSessionIdKey, activeDisciplineSession.Session.Id.ToString());
         }
 
-        public void NextStartNumber()
+        public bool NextStartNumber()
         {
             if (!HasActiveSession)
             {
                 throw new InvalidOperationException("Session must be active to advance position.");
             }
+
+            return activeDisciplineSession!.MoveNext();
         }
 
-        public void PreviousStartNumber()
+        public bool PreviousStartNumber()
         {
             if (!HasActiveSession)
             {
                 throw new InvalidOperationException("Session must be active to move back position.");
             }
+
+            return activeDisciplineSession!.GoBack();
         }
 
         public void CompleteSession()
@@ -242,6 +259,35 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
             {
                 throw new InvalidOperationException("No active session.");
             }
+
+            activeDisciplineSession = null;
+            viewStateRepository.Remove(ActiveSessionIdKey);
+        }
+
+        private static DisciplineSession GetDisciplineSession(ICompetitionService competitionService,
+            IDisciplineSessionRepository repo, Guid disciplineId)
+        {
+            var sessions = new List<DisciplineSession>();
+            foreach (var sessionId in competitionService.ActiveCompetition.DisciplineSessions)
+            {
+                if (repo.TryGet(sessionId, out DisciplineSession? session))
+                {
+                    sessions.Add(session!);
+                }
+            }
+
+            var sessionCandidate = sessions.FirstOrDefault(x => x.DisciplineId == disciplineId);
+            if (sessionCandidate == null)
+            {
+                sessionCandidate = new DisciplineSession
+                {
+                    DisciplineId = disciplineId
+                };
+                repo.AddOrUpdate(sessionCandidate);
+                competitionService.AddDisciplineSession(sessionCandidate);
+            }
+
+            return sessionCandidate;
         }
     }
 }

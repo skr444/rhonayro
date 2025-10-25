@@ -11,6 +11,7 @@ using RhonAyro.Infrastructure.Storage.Api;
 using RhonAyro.Client.Desktop.Ui.Extensions;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using RhonAyro.Client.Desktop.Ui.Navigation;
 
 namespace RhonAyro.Client.Desktop.Ui.ViewModels
 {
@@ -21,7 +22,8 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private readonly IWheelRepository wheelRepository;
         private readonly IDisciplineSessionService disciplineSessionService;
         private DisciplineItemViewModel? selectedDiscipline;
-        private bool isSessionLocked;
+        private bool hasNext;
+        private bool hasPrevious;
 
         public ObservableCollection<DisciplineItemViewModel> DisciplineItems { get; } = [];
 
@@ -30,67 +32,142 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             get => selectedDiscipline;
             set
             {
-                if ((value != null) && SetProperty(ref selectedDiscipline, value))
+                if (   (value != null)
+                    && SetProperty(ref selectedDiscipline, value)
+                    && !disciplineSessionService.HasActiveSession)
                 {
                     disciplineSessionService.SetActiveDiscipline(selectedDiscipline.Discipline.Id);
                     OnPropertyChanged(nameof(Roster));
+                    OnPropertyChanged(nameof(IsSessionLocked));
+                    OnPropertyChanged(nameof(StartNumber));
+                    OnPropertyChanged(nameof(Athlete));
+                    OnPropertyChanged(nameof(Coach));
+                    OnPropertyChanged(nameof(WheelSize));
+                    hasNext = true;
+                    hasPrevious = false;
+                    (NextPerformanceCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (PreviousPerformanceCommand as RelayCommand)?.NotifyCanExecuteChanged();
                 }
             }
         }
 
-        public bool IsSessionLocked
-        {
-            get => isSessionLocked;
-            set
-            {
-                if (value && SetProperty(ref isSessionLocked, value))
-                {
-                }
-            }
-        }
+        public bool IsSessionLocked => disciplineSessionService.HasActiveSession;
 
         public IEnumerable<StartListEntryItemViewModel> Roster => ConvertRoster(disciplineSessionService.Roster);
 
-        public string StartNumber
-        {
-            get
-            {
-                return "1";
-            }
-        }
+        public string StartNumber => disciplineSessionService.Current?.StartPosition.ToString() ?? String.Empty;
 
         public string Athlete
         {
-            get => "Pirmin Zurbrügg";
+            get
+            {
+                if (clubMemberRepository.TryGet(disciplineSessionService.Current?.AthleteId ?? Guid.Empty,
+                    out ClubMember? member))
+                {
+                    return member!.FullName;
+                }
+
+                return String.Empty;
+            }
         }
 
         public string Coach
         {
-            get => "Gaby";
+            get
+            {
+                if (clubMemberRepository.TryGet(disciplineSessionService.Current?.CoachId ?? Guid.Empty,
+                    out ClubMember? member))
+                {
+                    return member!.FullName;
+                }
+
+                return String.Empty;
+            }
         }
 
         public string WheelSize
         {
-            get => "230";
+            get
+            {
+                if (wheelRepository.TryGet(disciplineSessionService.Current?.WheelId ?? Guid.Empty,
+                    out Wheel? wheel))
+                {
+                    return wheel!.Size.ToString();
+                }
+
+                return String.Empty;
+            }
         }
 
-        public string SessionControlButtonText { get; private set; }
+        public string SessionControlButtonText => IsSessionLocked ? "Complete session" : "Start session";
 
         public ICommand StartSessionCommand { get; }
 
-        public CompetitionViewModel(IFileStorage storage, IDisciplineSessionService disciplineSessions)
+        public ICommand NextPerformanceCommand { get; }
+        public ICommand PreviousPerformanceCommand { get; }
+
+        public CompetitionViewModel(IFileStorage storage, IDisciplineSessionService disciplineSessions,
+            INavigationService navigation)
         {
             clubMemberRepository = storage.GetRepository<IClubMemberRepository>();
             disciplineRepository = storage.GetRepository<IDisciplineRepository>();
             wheelRepository = storage.GetRepository<IWheelRepository>();
             disciplineSessionService = disciplineSessions;
-
-            SessionControlButtonText = "Start session";
+            hasNext = true;
+            hasPrevious = false;
 
             StartSessionCommand = new RelayCommand(() =>
             {
+                try
+                {
+                    if (disciplineSessionService.HasActiveSession)
+                    {
+                        disciplineSessionService.CompleteSession();
+                    }
+                    else
+                    {
+                        disciplineSessionService.StartSession();
+                    }
 
+                    OnPropertyChanged(nameof(IsSessionLocked));
+                    OnPropertyChanged(nameof(SessionControlButtonText));
+                    OnPropertyChanged(nameof(StartNumber));
+                    OnPropertyChanged(nameof(Athlete));
+                    OnPropertyChanged(nameof(Coach));
+                    OnPropertyChanged(nameof(WheelSize));
+                    (NextPerformanceCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (PreviousPerformanceCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                }
+                catch (Exception ex)
+                {
+                    navigation.ShowMessageBox(ex.Message, "Invalid operation",
+                        MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
             });
+
+            NextPerformanceCommand = new RelayCommand(() =>
+            {
+                hasNext = disciplineSessionService.NextStartNumber();
+                hasPrevious = true;
+                OnPropertyChanged(nameof(StartNumber));
+                OnPropertyChanged(nameof(Athlete));
+                OnPropertyChanged(nameof(Coach));
+                OnPropertyChanged(nameof(WheelSize));
+                (NextPerformanceCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (PreviousPerformanceCommand as RelayCommand)?.NotifyCanExecuteChanged();
+            }, () => IsSessionLocked && hasNext);
+
+            PreviousPerformanceCommand = new RelayCommand(() =>
+            {
+                hasPrevious = disciplineSessionService.PreviousStartNumber();
+                hasNext = true;
+                OnPropertyChanged(nameof(StartNumber));
+                OnPropertyChanged(nameof(Athlete));
+                OnPropertyChanged(nameof(Coach));
+                OnPropertyChanged(nameof(WheelSize));
+                (NextPerformanceCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (PreviousPerformanceCommand as RelayCommand)?.NotifyCanExecuteChanged();
+            }, () => IsSessionLocked && hasPrevious);
 
             RefreshDisciplineSelections();
         }

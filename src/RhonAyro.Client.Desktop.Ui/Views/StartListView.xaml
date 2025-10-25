@@ -36,6 +36,9 @@
                 <RadioButton Content="{Binding StraightBasicLabel}"
                              Margin="0 0 25 0"
                              IsChecked="{Binding StraightBasicChecked, Mode=OneWayToSource}"/>
+                <RadioButton Content="{Binding StraightMediumLabel}"
+                             Margin="0 0 25 0"
+                             IsChecked="{Binding StraightMediumChecked, Mode=OneWayToSource}"/>
                 <RadioButton Content="{Binding StraightAdvancedLabel}"
                              Margin="0 0 25 0"
                              IsChecked="{Binding StraightAdvancedChecked, Mode=OneWayToSource}"/>

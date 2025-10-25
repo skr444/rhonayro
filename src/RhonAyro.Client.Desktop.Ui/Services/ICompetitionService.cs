@@ -19,5 +19,6 @@ namespace RhonAyro.Client.Desktop.Ui.Services
         void SetManager(Guid id);
         Discipline? GetDiscipline(Guid id);
         Discipline? GetDiscipline(string name);
+        void AddDisciplineSession(DisciplineSession session);
     }
 }

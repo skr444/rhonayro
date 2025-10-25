@@ -9,6 +9,12 @@ namespace RhonAyro.Client.Desktop.Ui.Services
     {
         IEnumerable<Discipline> EnlistedDisciplines { get; }
         IEnumerable<StartListEntry> Roster { get; }
+        StartListEntry? Current { get; }
+        bool HasActiveSession { get; }
         void SetActiveDiscipline(Guid id);
+        void StartSession();
+        bool NextStartNumber();
+        bool PreviousStartNumber();
+        void CompleteSession();
     }
 }

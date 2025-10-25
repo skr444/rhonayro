@@ -28,7 +28,7 @@
                       DisplayMemberPath="Name"
                       Padding="16 6"
                       VerticalContentAlignment="Center"
-                      IsEnabled="{Binding IsSessionLocked, Converter={StaticResource Inverter}}"
+                      IsEnabled="{Binding IsSessionLocked, Converter={StaticResource Inverter}, Mode=OneWay}"
                       ToolTip="Choose a discipline and confirm to start the session."/>
 
             <!-- Confirm starts & locks the session -->
@@ -305,8 +305,10 @@
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="1"
                             Content="Next"
+                            Command="{Binding NextPerformanceCommand}"
                             Margin="10"/>
                     <Button Content="Prev."
+                            Command="{Binding PreviousPerformanceCommand}"
                             Margin="40"/>
                 </Grid>
             </Grid>

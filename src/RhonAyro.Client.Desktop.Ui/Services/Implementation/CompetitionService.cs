@@ -76,10 +76,11 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
                 disciplines = new List<Discipline>
                 {
                     new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000001"), Name = "Straight basic" },
-                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000002"), Name = "Straight advanced" },
-                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000003"), Name = "Jump" },
-                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000004"), Name = "Spiral" },
-                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000005"), Name = "Pair" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000002"), Name = "Straight medium" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000003"), Name = "Straight advanced" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000004"), Name = "Jump" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000005"), Name = "Spiral" },
+                    new() { Id = Guid.Parse("dddddddd-0000-0000-0000-d00000000006"), Name = "Pair" },
                 };
 
                 foreach (Discipline discipline in disciplines)
@@ -138,6 +139,12 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
         public void SetManager(Guid id)
         {
             activeCompetition.CompetitionManager = id;
+            competitionRepository.AddOrUpdate(activeCompetition);
+        }
+
+        public void AddDisciplineSession(DisciplineSession session)
+        {
+            activeCompetition.DisciplineSessions.Add(session.Id);
             competitionRepository.AddOrUpdate(activeCompetition);
         }
     }

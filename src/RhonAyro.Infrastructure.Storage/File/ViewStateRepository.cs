@@ -144,12 +144,26 @@ namespace RhonAyro.Infrastructure.Storage.File
 
         public bool Remove(string key)
         {
-            return store.Remove(key);
+            bool success = store.Remove(key);
+
+            if (success)
+            {
+                Save();
+            }
+
+            return success;
         }
 
         public bool Remove<TViewModel>(string key)
         {
-            return store.Remove($"{typeof(TViewModel).Name}.{key}");
+            bool success = store.Remove($"{typeof(TViewModel).Name}.{key}");
+
+            if (success)
+            {
+                Save();
+            }
+
+            return success;
         }
     }
 }

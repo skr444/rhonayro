@@ -108,10 +108,10 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        public string StraightAdvancedLabel =>
+        public string StraightMediumLabel =>
             competitionService.GetDiscipline(Guid.Parse("dddddddd-0000-0000-0000-d00000000002"))!.Name;
 
-        public bool StraightAdvancedChecked
+        public bool StraightMediumChecked
         {
             set
             {
@@ -130,10 +130,10 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        public string JumpLabel =>
+        public string StraightAdvancedLabel =>
             competitionService.GetDiscipline(Guid.Parse("dddddddd-0000-0000-0000-d00000000003"))!.Name;
 
-        public bool JumpChecked
+        public bool StraightAdvancedChecked
         {
             set
             {
@@ -152,10 +152,10 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        public string SpiralLabel =>
+        public string JumpLabel =>
             competitionService.GetDiscipline(Guid.Parse("dddddddd-0000-0000-0000-d00000000004"))!.Name;
 
-        public bool SpiralChecked
+        public bool JumpChecked
         {
             set
             {
@@ -174,8 +174,30 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
-        public string PairLabel =>
+        public string SpiralLabel =>
             competitionService.GetDiscipline(Guid.Parse("dddddddd-0000-0000-0000-d00000000005"))!.Name;
+
+        public bool SpiralChecked
+        {
+            set
+            {
+                if (value)
+                {
+                    activeDisciplineFilter = Guid.Parse("dddddddd-0000-0000-0000-d00000000005");
+                    OnPropertyChanged(nameof(Roster));
+
+                    selectedStartListEntryItem = null;
+                    OnPropertyChanged(nameof(StartPosition));
+
+                    (RemoveFromRosterCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveUpCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (MoveDownCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                }
+            }
+        }
+
+        public string PairLabel =>
+            competitionService.GetDiscipline(Guid.Parse("dddddddd-0000-0000-0000-d00000000006"))!.Name;
 
         public bool PairChecked
         {
@@ -183,7 +205,7 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 if (value)
                 {
-                    activeDisciplineFilter = Guid.Parse("dddddddd-0000-0000-0000-d00000000005");
+                    activeDisciplineFilter = Guid.Parse("dddddddd-0000-0000-0000-d00000000006");
                     OnPropertyChanged(nameof(Roster));
 
                     selectedStartListEntryItem = null;
