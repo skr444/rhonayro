@@ -89,6 +89,7 @@ namespace RhonAyro.Client.Desktop.Ui.Services.Implementation
                 currentStartListEntry = getCurrentStartListEntry;
                 moveNext = nextStartListEntry;
                 goBack = previousStartListEntry;
+                Score = new ScoreBoard();
 
                 Performance = GetPerformanceEntryByStartListEntryId(performanceEntryRepository,
                     currentStartListEntry().Id);

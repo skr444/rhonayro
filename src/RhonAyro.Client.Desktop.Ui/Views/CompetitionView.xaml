@@ -203,7 +203,6 @@
                             <Setter Property="FontSize" Value="20"/>
                             <Setter Property="FontWeight" Value="Bold"/>
                             <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="behaviors:TextBoxBehaviors.DigitsOnly" Value="True"/>
                         </Style>
                         <Style TargetType="ColumnDefinition">
                             <Setter Property="Width" Value="1*"/>
@@ -221,7 +220,10 @@
                                    FontSize="25"
                                    FontWeight="Bold"
                                    Margin="5"/>
-                            <TextBox Grid.Column="1"/>
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding Difficulty}"
+                                     behaviors:TextBoxBehaviors.DigitsOnly="True"
+                                     IsEnabled="{Binding IsSessionLocked, Mode=OneWay}"/>
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -234,7 +236,13 @@
                                    FontSize="25"
                                    FontWeight="Bold"
                                    Margin="5"/>
-                            <TextBox Grid.Column="1"/>
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding ScoreOne}"
+                                     behaviors:TextBoxBehaviors.NumericInput="True"
+                                     behaviors:TextBoxBehaviors.AllowDecimal="True"
+                                     behaviors:TextBoxBehaviors.AllowNegative="False"
+                                     behaviors:TextBoxBehaviors.MaxDecimalPlaces="2"
+                                     IsEnabled="{Binding IsSessionLocked, Mode=OneWay}"/>
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -247,7 +255,13 @@
                                    FontSize="25"
                                    FontWeight="Bold"
                                    Margin="5"/>
-                            <TextBox Grid.Column="1"/>
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding ScoreTwo}"
+                                     behaviors:TextBoxBehaviors.NumericInput="True"
+                                     behaviors:TextBoxBehaviors.AllowDecimal="True"
+                                     behaviors:TextBoxBehaviors.AllowNegative="False"
+                                     behaviors:TextBoxBehaviors.MaxDecimalPlaces="2"
+                                     IsEnabled="{Binding IsSessionLocked, Mode=OneWay}"/>
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -260,7 +274,13 @@
                                    FontSize="25"
                                    FontWeight="Bold"
                                    Margin="5"/>
-                            <TextBox Grid.Column="1"/>
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding ScoreThree}"
+                                     behaviors:TextBoxBehaviors.NumericInput="True"
+                                     behaviors:TextBoxBehaviors.AllowDecimal="True"
+                                     behaviors:TextBoxBehaviors.AllowNegative="False"
+                                     behaviors:TextBoxBehaviors.MaxDecimalPlaces="2"
+                                     IsEnabled="{Binding IsSessionLocked, Mode=OneWay}"/>
                         </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -273,7 +293,13 @@
                                    FontSize="25"
                                    FontWeight="Bold"
                                    Margin="5"/>
-                            <TextBox Grid.Column="1"/>
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding ScoreFour}"
+                                     behaviors:TextBoxBehaviors.NumericInput="True"
+                                     behaviors:TextBoxBehaviors.AllowDecimal="True"
+                                     behaviors:TextBoxBehaviors.AllowNegative="False"
+                                     behaviors:TextBoxBehaviors.MaxDecimalPlaces="2"
+                                     IsEnabled="{Binding IsSessionLocked, Mode=OneWay}"/>
                         </Grid>
                     </StackPanel>
                 </Grid>
@@ -289,7 +315,7 @@
                            VerticalContentAlignment="Center"
                            Margin="0 0 20 0"/>
                     <Label Grid.Column="1"
-                           Content="9.7"
+                           Content="{Binding FinalScore}"
                            HorizontalContentAlignment="Left"
                            VerticalContentAlignment="Center"
                            FontSize="40"

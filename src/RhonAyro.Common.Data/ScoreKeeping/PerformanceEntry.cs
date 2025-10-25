@@ -23,12 +23,12 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <summary>
         /// Gets or sets the difficulty level of this performance.
         /// </summary>
-        public double Difficluty { get; set; }
+        public float Difficluty { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the final score that is calculated when the performance has been completed.
         /// </summary>
-        public double FinalScore { get; set; }
+        public float FinalScore { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="PerformanceEntry"/>.

@@ -15,7 +15,7 @@ namespace RhonAyro.Common.Data.ScoreKeeping
         /// <summary>
         /// Gets or sets the score value.
         /// </summary>
-        public double Value { get; set; }
+        public float Value { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="ScoreEntry"/>.

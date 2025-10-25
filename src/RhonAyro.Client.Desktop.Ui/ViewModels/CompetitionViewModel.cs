@@ -24,6 +24,11 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
         private DisciplineItemViewModel? selectedDiscipline;
         private bool hasNext;
         private bool hasPrevious;
+        private int difficulty;
+        private float scoreOne;
+        private float scoreTwo;
+        private float scoreThree;
+        private float scoreFour;
 
         public ObservableCollection<DisciplineItemViewModel> DisciplineItems { get; } = [];
 
@@ -99,10 +104,71 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             }
         }
 
+        public int Difficulty
+        {
+            get => difficulty;
+            set
+            {
+                if (SetProperty(ref difficulty, value))
+                {
+                    OnPropertyChanged(nameof(FinalScore));
+                }
+            }
+        }
+
+        public float ScoreOne
+        {
+            get => scoreOne;
+            set
+            {
+                if (SetProperty(ref scoreOne, value))
+                {
+                    OnPropertyChanged(nameof(FinalScore));
+                }
+            }
+        }
+
+        public float ScoreTwo
+        {
+            get => scoreTwo;
+            set
+            {
+                if (SetProperty(ref scoreTwo, value))
+                {
+                    OnPropertyChanged(nameof(FinalScore));
+                }
+            }
+        }
+
+        public float ScoreThree
+        {
+            get => scoreThree;
+            set
+            {
+                if (SetProperty(ref scoreThree, value))
+                {
+                    OnPropertyChanged(nameof(FinalScore));
+                }
+            }
+        }
+
+        public float ScoreFour
+        {
+            get => scoreFour;
+            set
+            {
+                if (SetProperty(ref scoreFour, value))
+                {
+                    OnPropertyChanged(nameof(FinalScore));
+                }
+            }
+        }
+
+        public float FinalScore => CalculateScore(difficulty, scoreOne, scoreTwo, scoreThree, scoreFour);
+
         public string SessionControlButtonText => IsSessionLocked ? "Complete session" : "Start session";
 
         public ICommand StartSessionCommand { get; }
-
         public ICommand NextPerformanceCommand { get; }
         public ICommand PreviousPerformanceCommand { get; }
 
@@ -202,6 +268,23 @@ namespace RhonAyro.Client.Desktop.Ui.ViewModels
             {
                 yield return new DisciplineItemViewModel(item);
             }
+        }
+
+        private static float CalculateScore(int difficulty, params float[] scoreValues)
+        {
+            ArgumentNullException.ThrowIfNull(scoreValues);
+            if (scoreValues.Length != 4)
+            {
+                throw new ArgumentException($"Expecting exactly four score values, but got {scoreValues.Length}.",
+                    nameof(scoreValues));
+            }
+
+            float lowest = scoreValues.Min();
+            float highest = scoreValues.Max();
+
+            var eligibleScores = scoreValues.Except([lowest, highest]);
+            var average = eligibleScores.Average();
+            return average * difficulty;
         }
     }
 }
