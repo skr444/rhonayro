@@ -31,3 +31,13 @@ deductions
 -> all scorings have deductions
 
 
+
+
+----------------------------------------
+
+athletes that perform, but will not be in the ranking
+-> will be judged but won't have a ranking
+
+
+
+
